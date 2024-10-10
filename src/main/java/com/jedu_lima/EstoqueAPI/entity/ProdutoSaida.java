@@ -13,8 +13,8 @@ public class ProdutoSaida extends Produto {
 
 	}
 
-	public ProdutoSaida(Long id, String nome, Double preco, Integer quantidade, LocalDate dataSaida) {
-		super(id, nome, preco, quantidade);
+	public ProdutoSaida(Long id, Long codigoDeBarras, String nome, Double preco, Integer quantidade, LocalDate dataSaida) {
+		super(id, codigoDeBarras, nome, preco, quantidade);
 		this.setDataSaida(dataSaida);
 	}
 
