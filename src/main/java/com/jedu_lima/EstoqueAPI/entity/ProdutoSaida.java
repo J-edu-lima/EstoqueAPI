@@ -1,5 +1,6 @@
 package com.jedu_lima.EstoqueAPI.entity;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Objects;
 
@@ -23,14 +24,14 @@ public class ProdutoSaida {
 
 	private Integer quantidadeSaida;
 
-	private Double totalVenda;
+	private BigDecimal totalVenda;
 
 	private LocalDate dataSaida;
 
 	public ProdutoSaida() {
 	}
 
-	public ProdutoSaida(ProdutoCadastro produto, Integer quantidadeSaida, Double totalVenda, LocalDate dataSaida) {
+	public ProdutoSaida(ProdutoCadastro produto, Integer quantidadeSaida, BigDecimal totalVenda, LocalDate dataSaida) {
 		this.produto = produto;
 		this.quantidadeSaida = quantidadeSaida;
 		this.totalVenda = totalVenda;
@@ -61,11 +62,11 @@ public class ProdutoSaida {
 		this.quantidadeSaida = quantidadeSaida;
 	}
 
-	public Double getTotalVenda() {
+	public BigDecimal getTotalVenda() {
 		return totalVenda;
 	}
 
-	public void setTotalVenda(Double totalVenda) {
+	public void setTotalVenda(BigDecimal totalVenda) {
 		this.totalVenda = totalVenda;
 	}
 

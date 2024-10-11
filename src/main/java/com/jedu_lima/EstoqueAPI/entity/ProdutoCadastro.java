@@ -1,7 +1,9 @@
 package com.jedu_lima.EstoqueAPI.entity;
 
+import java.math.BigDecimal;
 import java.util.Objects;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
@@ -15,19 +17,20 @@ public class ProdutoCadastro {
 
 	private String nome;
 
-	private Double valorCompra;
+	private BigDecimal valorCompra;
 
 	private Integer quantidadeTotal;
 
-	private Integer porcentagemSobreVenda;
+	private Double porcentagemSobreVenda;
 
-	private Double valorVenda;
+	@Column(precision = 10, scale = 2)
+	private BigDecimal valorVenda;
 
 	public ProdutoCadastro() {
 	}
 
-	public ProdutoCadastro(Long codigoDeBarras, String nome, Double valorCompra, Integer quantidadeTotal,
-			Integer porcentagemSobreVenda) {
+	public ProdutoCadastro(Long codigoDeBarras, String nome, BigDecimal valorCompra, Integer quantidadeTotal,
+			Double porcentagemSobreVenda) {
 		this.codigoDeBarras = codigoDeBarras;
 		this.nome = nome;
 		this.valorCompra = valorCompra;
@@ -51,11 +54,11 @@ public class ProdutoCadastro {
 		this.nome = nome;
 	}
 
-	public Double getValorCompra() {
+	public BigDecimal getValorCompra() {
 		return valorCompra;
 	}
 
-	public void setValorCompra(Double valorCompra) {
+	public void setValorCompra(BigDecimal valorCompra) {
 		this.valorCompra = valorCompra;
 	}
 
@@ -67,19 +70,19 @@ public class ProdutoCadastro {
 		this.quantidadeTotal = quantidadeTotal;
 	}
 
-	public Integer getPorcentagemSobreVenda() {
+	public Double getPorcentagemSobreVenda() {
 		return porcentagemSobreVenda;
 	}
 
-	public void setPorcentagemSobreVenda(Integer porcentagemSobreVenda) {
+	public void setPorcentagemSobreVenda(Double porcentagemSobreVenda) {
 		this.porcentagemSobreVenda = porcentagemSobreVenda;
 	}
 
-	public Double getValorVenda() {
+	public BigDecimal getValorVenda() {
 		return valorVenda;
 	}
 
-	public void setValorVenda(Double valorVenda) {
+	public void setValorVenda(BigDecimal valorVenda) {
 		this.valorVenda = valorVenda;
 	}
 
