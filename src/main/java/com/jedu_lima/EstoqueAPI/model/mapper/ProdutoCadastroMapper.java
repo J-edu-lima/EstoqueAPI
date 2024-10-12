@@ -10,6 +10,7 @@ public class ProdutoCadastroMapper {
 
 	public static ProdutoCadastro paraEntidade(CriarProdutoCadastroEntradaDto dto) {
 
-		return new ProdutoCadastro(dto.codigoDeBarras(), dto.nome(), dto.valorCompra(), 0, dto.porcentagemSobreVenda());
+		return new ProdutoCadastro(dto.id(), dto.codigoDeBarras(), dto.nome(), dto.valorCompra(), 0,
+				dto.porcentagemSobreVenda());
 	}
 }

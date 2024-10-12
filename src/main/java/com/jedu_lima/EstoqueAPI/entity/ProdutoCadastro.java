@@ -5,6 +5,8 @@ import java.util.Objects;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
@@ -13,6 +15,9 @@ import jakarta.persistence.Table;
 public class ProdutoCadastro {
 
 	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
+
 	private Long codigoDeBarras;
 
 	private String nome;
@@ -29,13 +34,22 @@ public class ProdutoCadastro {
 	public ProdutoCadastro() {
 	}
 
-	public ProdutoCadastro(Long codigoDeBarras, String nome, BigDecimal valorCompra, Integer quantidadeTotal,
+	public ProdutoCadastro(Long id, Long codigoDeBarras, String nome, BigDecimal valorCompra, Integer quantidadeTotal,
 			Double porcentagemSobreVenda) {
+		this.id = id;
 		this.codigoDeBarras = codigoDeBarras;
 		this.nome = nome;
 		this.valorCompra = valorCompra;
 		this.quantidadeTotal = quantidadeTotal;
 		this.porcentagemSobreVenda = porcentagemSobreVenda;
+	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
 	}
 
 	public Long getCodigoDeBarras() {

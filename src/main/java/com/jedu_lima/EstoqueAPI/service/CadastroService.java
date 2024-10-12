@@ -12,5 +12,4 @@ public interface CadastroService {
 	ProdutoCadastro buscar(Long codigo);
 	List<ProdutoCadastro> buscarTodos();
 	ProdutoCadastro atualizar(CriarProdutoCadastroEntradaDto novoProdutoDto, ProdutoCadastro produto);
-	ProdutoCadastro atualizarQuantidade(ProdutoCadastro produto, Integer quantidade);
 }

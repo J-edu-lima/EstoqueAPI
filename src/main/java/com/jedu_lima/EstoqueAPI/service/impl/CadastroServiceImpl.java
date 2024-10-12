@@ -14,6 +14,8 @@ import com.jedu_lima.EstoqueAPI.repository.ProdutoCadastroRepository;
 import com.jedu_lima.EstoqueAPI.service.CadastroService;
 import com.jedu_lima.EstoqueAPI.service.CalculoService;
 
+import jakarta.transaction.Transactional;
+
 @Service
 public class CadastroServiceImpl implements CadastroService {
 
@@ -38,14 +40,14 @@ public class CadastroServiceImpl implements CadastroService {
 	}
 
 	@Override
-	public void exlcuir(Long codigo) {
+	public void exlcuir(Long id) {
 
-		repository.deleteByCodigoDeBarras(codigo);
+		repository.deleteById(id);
 	}
 
 	@Override
-	public ProdutoCadastro buscar(Long codigo) {
-		Optional<ProdutoCadastro> produto = repository.findByCodigoDeBarras(codigo);
+	public ProdutoCadastro buscar(Long id) {
+		Optional<ProdutoCadastro> produto = repository.findById(id);
 
 		return produto.orElseThrow();
 	}
@@ -56,21 +58,34 @@ public class CadastroServiceImpl implements CadastroService {
 		return repository.findAll();
 	}
 
+	@Transactional
 	@Override
 	public ProdutoCadastro atualizar(CriarProdutoCadastroEntradaDto novoProdutoDto, ProdutoCadastro produtoAtual) {
-		ProdutoCadastro novoProduto = ProdutoCadastroMapper.paraEntidade(novoProdutoDto);
-		produtoAtual.setNome(novoProduto.getNome());
-		produtoAtual.setValorCompra(novoProduto.getValorCompra());
-		produtoAtual.setPorcentagemSobreVenda(novoProduto.getPorcentagemSobreVenda());
+		atualizarDados(novoProdutoDto, produtoAtual);
 
 		return repository.save(produtoAtual);
 	}
 
-	@Override
-	public ProdutoCadastro atualizarQuantidade(ProdutoCadastro produto, Integer quantidade) {
-		produto.setQuantidadeTotal(quantidade);
+	private void atualizarDados(CriarProdutoCadastroEntradaDto novoProdutoDto, ProdutoCadastro produtoAtual) {
+		ProdutoCadastro novoProduto = ProdutoCadastroMapper.paraEntidade(novoProdutoDto);
 
-		return repository.save(produto);
+		if (novoProduto.getCodigoDeBarras() != null) {
+			produtoAtual.setCodigoDeBarras(novoProduto.getCodigoDeBarras());
+		}
+		if (novoProduto.getNome() != null) {
+			produtoAtual.setNome(novoProduto.getNome());
+		}
+		if (novoProduto.getPorcentagemSobreVenda() != null) {
+			produtoAtual.setPorcentagemSobreVenda(novoProduto.getPorcentagemSobreVenda());
+			BigDecimal valorVenda = calculoService.calcularValorVenda(produtoAtual.getValorCompra(),
+					novoProduto.getPorcentagemSobreVenda());
+			produtoAtual.setValorVenda(valorVenda);
+		}
+		if (novoProduto.getValorCompra() != null) {
+			produtoAtual.setValorCompra(novoProduto.getValorCompra());
+			BigDecimal valorVenda = calculoService.calcularValorVenda(novoProduto.getValorCompra(),
+					novoProduto.getPorcentagemSobreVenda());
+			produtoAtual.setValorVenda(valorVenda);
+		}
 	}
-
 }
