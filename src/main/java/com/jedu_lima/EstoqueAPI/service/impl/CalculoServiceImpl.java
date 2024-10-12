@@ -34,9 +34,10 @@ public class CalculoServiceImpl implements CalculoService {
 	}
 
 	@Override
-	public BigDecimal calcularValorTotalVenda(BigDecimal valorVednda, Integer quantidadeSaida) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	public BigDecimal calcularValorTotalVenda(BigDecimal valorVenda, Integer quantidadeSaida) {
+		Double multiplicacao = valorVenda.doubleValue() * quantidadeSaida;
+		BigDecimal valorConvertido = new BigDecimal(multiplicacao);
 
+		return valorConvertido;
+	}
 }

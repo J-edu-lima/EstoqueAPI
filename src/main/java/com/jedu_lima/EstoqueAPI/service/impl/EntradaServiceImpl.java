@@ -74,5 +74,4 @@ public class EntradaServiceImpl implements EntradaService {
 				produtoCadastro.getPorcentagemSobreVenda(), produtoCadastro.getValorVenda());
 		return produtoDto;
 	}
-
 }
