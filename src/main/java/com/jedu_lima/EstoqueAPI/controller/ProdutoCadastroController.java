@@ -39,7 +39,7 @@ public class ProdutoCadastroController {
 
 	@DeleteMapping("/{id}")
 	public ResponseEntity<Void> excluir(@PathVariable("id") Long codigoDeBarras) {
-		cadastroService.exlcuir(codigoDeBarras);
+		cadastroService.excluir(codigoDeBarras);
 
 		return ResponseEntity.status(HttpStatus.OK).build();
 	}
@@ -63,8 +63,7 @@ public class ProdutoCadastroController {
 	@PutMapping("/{id}")
 	public ResponseEntity<Void> atualizar(@RequestBody CriarProdutoCadastroEntradaDto novaTarefa,
 			@PathVariable Long id) {
-		ProdutoCadastro produto = cadastroService.buscar(id);
-		cadastroService.atualizar(novaTarefa, produto);
+		cadastroService.atualizar(novaTarefa, id);
 
 		return ResponseEntity.accepted().build();
 	}

@@ -11,8 +11,8 @@ public class ProdutoEntradaMapper {
 	public ProdutoEntradaMapper(ProdutoEntrada produto) {
 	}
 
-	public static ProdutoEntrada paraEntidade(ProdutoCadastro produto, CriarProdutoEntradaDto dtoEntrada) {
+	public static ProdutoEntrada paraEntidade(ProdutoCadastro produto, CriarProdutoEntradaDto produtoEntradaDto) {
 
-		return new ProdutoEntrada(produto, dtoEntrada.quantidadeEntrada(), LocalDate.now());
+		return new ProdutoEntrada(produto, produtoEntradaDto.quantidadeEntrada(), LocalDate.now());
 	}
 }

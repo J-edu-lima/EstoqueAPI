@@ -19,15 +19,15 @@ import jakarta.transaction.Transactional;
 @Service
 public class CadastroServiceImpl implements CadastroService {
 
-	@Autowired
-	private CalculoService calculoService;
-
 	private ProdutoCadastroRepository repository;
 
 	@Autowired
 	public CadastroServiceImpl(ProdutoCadastroRepository repository) {
 		this.repository = repository;
 	}
+
+	@Autowired
+	private CalculoService calculoService;
 
 	@Override
 	public void cadastro(CriarProdutoCadastroEntradaDto produto) {
@@ -40,7 +40,7 @@ public class CadastroServiceImpl implements CadastroService {
 	}
 
 	@Override
-	public void exlcuir(Long id) {
+	public void excluir(Long id) {
 
 		repository.deleteById(id);
 	}
@@ -60,7 +60,8 @@ public class CadastroServiceImpl implements CadastroService {
 
 	@Transactional
 	@Override
-	public ProdutoCadastro atualizar(CriarProdutoCadastroEntradaDto novoProdutoDto, ProdutoCadastro produtoAtual) {
+	public ProdutoCadastro atualizar(CriarProdutoCadastroEntradaDto novoProdutoDto, Long id) {
+		ProdutoCadastro produtoAtual = buscar(id);
 		atualizarDados(novoProdutoDto, produtoAtual);
 
 		return repository.save(produtoAtual);
@@ -74,6 +75,9 @@ public class CadastroServiceImpl implements CadastroService {
 		}
 		if (novoProduto.getNome() != null) {
 			produtoAtual.setNome(novoProduto.getNome());
+		}
+		if (novoProduto.getQuantidadeTotal() != null) {
+			produtoAtual.setQuantidadeTotal(novoProduto.getQuantidadeTotal());
 		}
 		if (novoProduto.getPorcentagemSobreVenda() != null) {
 			produtoAtual.setPorcentagemSobreVenda(novoProduto.getPorcentagemSobreVenda());
