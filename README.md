@@ -18,38 +18,37 @@ Este projeto é uma API de gerenciamento de estoque, projetada para facilitar o 
 - [Spring Boot](https://spring.io/projects/spring-boot) - Framework para construção de APIs Java.
 - [Microsoft SQL Server (MSSQL)](https://www.microsoft.com/en-us/sql-server/sql-server-downloads) - Sistema de gerenciamento de banco de dados, que permite integração com o Power BI para maior controle de estoque.
 
-## Como Executar
-
-1. Clone o repositório:
+1. **Clone o repositório**: Faça uma cópia do projeto para o seu computador.
    ```bash
    git clone git@github.com:J-edu-lima/EstoqueAPI.git
-Navegue até o diretório do projeto:
+   ```
 
-bash
-Copiar código
-cd EstoqueAPI
-Configure seu banco de dados e atualize as credenciais no arquivo application.properties.
+2. **Entre na pasta do projeto**:
+   ```bash
+   cd EstoqueAPI
+   ```
 
-Execute o projeto:
+3. **Configure o banco de dados**:
+   - Crie um banco de dados chamado `estoqueAPI` no MsSQL.
+   - Atualize as configurações de conexão no arquivo `application.properties`.
 
-bash
-Copiar código
-mvn spring-boot:run
-Acesse a API utilizando postman em http://localhost:8080.
+4. **Execute o projeto**: Comece a usar o programa e faça as requisiçoes pelo postman ou em outra plataforma.
 
-Endpoints (Collection do Postman salvo em "PostmanRequisições")
-POST v1/produto: Adiciona um novo produto.
-PUT v1/produto/{id}: Atualiza as informações de um produto existente.
-GET v1/produto: Lista todos os produtos.
-DELETE v1/produto/{id}: Remove um produto do estoque.
-POST v1/entrada/{id}: Registra a entrada de uma quantidade de produtos.
-POST v1/saida/{id}: Registra a saída de uma quantidade de produtos.
+##Endpoints (Collection do Postman salvo em "PostmanRequisições")
 
-Futuras Atualizações
-Este projeto é um MVP e há planos para futuras atualizações, incluindo:
+-**POST** v1/produto: Adiciona um novo produto.
+-**PUT** v1/produto/{id}: Atualiza as informações de um produto existente.
+-**GET** v1/produto: Lista todos os produtos.
+-**DELETE** v1/produto/{id}: Remove um produto do estoque.
+-**POST** v1/entrada/{id}: Registra a entrada de uma quantidade de produtos.
+-**POST** v1/saida/{id}: Registra a saída de uma quantidade de produtos.
 
-Implementação de autenticação e autorização.
-Interface gráfica para facilitar a interação do usuário.
-Relatórios detalhados de vendas e estoque.
-Contribuições
+##Futuras Atualizações
+**Este projeto é um MVP e há planos para futuras atualizações, incluindo**:
+
+-Implementação de autenticação e autorização.
+-Interface gráfica para facilitar a interação do usuário.
+-Relatórios detalhados de vendas e estoque.
+
+##Contribuições
 Contribuições são bem-vindas! Sinta-se à vontade para abrir issues ou enviar pull requests.
