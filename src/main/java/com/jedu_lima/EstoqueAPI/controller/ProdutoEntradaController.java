@@ -19,7 +19,7 @@ import com.jedu_lima.EstoqueAPI.model.CriarProdutoEntradaDto;
 import com.jedu_lima.EstoqueAPI.service.EntradaService;
 
 @RestController
-@RequestMapping(value = "/v1/produto_entrada")
+@RequestMapping(value = "/v1/entrada")
 public class ProdutoEntradaController {
 
 	private EntradaService entradaService;

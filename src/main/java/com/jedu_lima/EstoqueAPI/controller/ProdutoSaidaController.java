@@ -19,7 +19,7 @@ import com.jedu_lima.EstoqueAPI.model.CriarProdutoSaidaDto;
 import com.jedu_lima.EstoqueAPI.service.SaidaService;
 
 @RestController
-@RequestMapping(value = "/v1/produto_saida")
+@RequestMapping(value = "/v1/saida")
 public class ProdutoSaidaController {
 
 	private SaidaService saidaService;

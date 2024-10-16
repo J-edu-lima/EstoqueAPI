@@ -20,7 +20,7 @@ import com.jedu_lima.EstoqueAPI.model.CriarProdutoCadastroEntradaDto;
 import com.jedu_lima.EstoqueAPI.service.CadastroService;
 
 @RestController
-@RequestMapping(value = "/v1/produto_cadastro")
+@RequestMapping(value = "/v1/produto")
 public class ProdutoCadastroController {
 
 	private CadastroService cadastroService;
@@ -38,15 +38,15 @@ public class ProdutoCadastroController {
 	}
 
 	@DeleteMapping("/{id}")
-	public ResponseEntity<Void> excluir(@PathVariable("id") Long codigoDeBarras) {
-		cadastroService.excluir(codigoDeBarras);
+	public ResponseEntity<Void> excluir(@PathVariable("id") Long id) {
+		cadastroService.excluir(id);
 
 		return ResponseEntity.status(HttpStatus.OK).build();
 	}
 
 	@GetMapping("/{id}")
-	public ResponseEntity<CriarProdutoCadastroEntradaDto> buscar(@PathVariable("id") Long codigoDeBarras) {
-		ProdutoCadastro produto = cadastroService.buscar(codigoDeBarras);
+	public ResponseEntity<CriarProdutoCadastroEntradaDto> buscar(@PathVariable("id") Long id) {
+		ProdutoCadastro produto = cadastroService.buscar(id);
 
 		return ResponseEntity.ok().body(new CriarProdutoCadastroEntradaDto(produto));
 	}
@@ -65,6 +65,6 @@ public class ProdutoCadastroController {
 			@PathVariable Long id) {
 		cadastroService.atualizar(novaTarefa, id);
 
-		return ResponseEntity.accepted().build();
+		return ResponseEntity.ok().build();
 	}
 }

@@ -91,5 +91,6 @@ public class CadastroServiceImpl implements CadastroService {
 					novoProduto.getPorcentagemSobreVenda());
 			produtoAtual.setValorVenda(valorVenda);
 		}
+
 	}
 }
