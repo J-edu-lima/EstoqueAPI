@@ -44,5 +44,4 @@ Este projeto é uma API de gerenciamento de estoque, projetada para facilitar o 
    - Relatórios detalhados de vendas e estoque.
 
 ## Contribuições
-
-   - Contribuições são bem-vindas! Sinta-se à vontade para abrir issues ou enviar pull requests.
+ Se você quiser ajudar a melhorar o projeto, fique à vontade para sugerir ideias ou fazer alterações.
