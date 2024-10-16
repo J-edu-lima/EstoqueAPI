@@ -34,7 +34,7 @@ Este projeto é uma API de gerenciamento de estoque, projetada para facilitar o 
 
 4. **Execute o projeto**: Comece a usar o programa e faça as requisiçoes pelo postman ou em outra plataforma.
 
-5. **Endpoints**: A collection do Postman está salvo em "PostmanRequisições", sendo necessario apenas a importação para o seu postman.
+5. **Endpoints**: A collection do Postman está salvo em "postmanRequisições", sendo necessario apenas a importação para o seu postman.
 
 ## Futuras Atualizações
 
