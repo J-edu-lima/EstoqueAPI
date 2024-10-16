@@ -34,16 +34,15 @@ Este projeto é uma API de gerenciamento de estoque, projetada para facilitar o 
 
 4. **Execute o projeto**: Comece a usar o programa e faça as requisiçoes pelo postman ou em outra plataforma.
 
-## Para acessar os Endpoints a collection do Postman está salvo em "PostmanRequisições", sendo necessario apenas a importação para o seu postman.
+5. **Endpoints**: A collection do Postman está salvo em "PostmanRequisições", sendo necessario apenas a importação para o seu postman.
 
 ## Futuras Atualizações
 
 **Este projeto é um MVP e há planos para futuras atualizações, incluindo**:
-
--Implementação de autenticação e autorização.
--Interface gráfica para facilitar a interação do usuário.
--Relatórios detalhados de vendas e estoque.
+   - Implementação de autenticação e autorização.
+   - Interface gráfica para facilitar a interação do usuário.
+   - Relatórios detalhados de vendas e estoque.
 
 ## Contribuições
 
-Contribuições são bem-vindas! Sinta-se à vontade para abrir issues ou enviar pull requests.
+   - Contribuições são bem-vindas! Sinta-se à vontade para abrir issues ou enviar pull requests.
