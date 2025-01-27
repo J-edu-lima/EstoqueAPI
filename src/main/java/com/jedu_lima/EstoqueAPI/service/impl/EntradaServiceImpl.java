@@ -71,7 +71,7 @@ public class EntradaServiceImpl implements EntradaService {
 	private CriarProdutoCadastroEntradaDto criarProdutoCadastroDTO(ProdutoCadastro produtoCadastro, Integer soma) {
 		CriarProdutoCadastroEntradaDto produtoDto = new CriarProdutoCadastroEntradaDto(produtoCadastro.getId(),
 				produtoCadastro.getCodigoDeBarras(), produtoCadastro.getNome(), produtoCadastro.getValorCompra(), soma,
-				produtoCadastro.getPorcentagemSobreVenda(), produtoCadastro.getValorVenda());
+				produtoCadastro.getPorcentagemSobreVenda(), produtoCadastro.getValorSugerido());
 		return produtoDto;
 	}
 }

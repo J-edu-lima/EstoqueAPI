@@ -39,7 +39,7 @@ public class SaidaServiceImpl implements SaidaService {
 				.quantidadeSubtracao(produtoSaidaDto.quantidadeSaida(), produtoCadastro.getQuantidadeTotal()));
 		cadastroService.atualizar(produtoDto, id);
 		ProdutoSaida produtoSaida = ProdutoSaidaMapper.paraEntidade(produtoCadastro, produtoSaidaDto);
-		produtoSaida.setTotalVenda(calculoService.calcularValorTotalVenda(produtoCadastro.getValorVenda(),
+		produtoSaida.setTotalVenda(calculoService.calcularValorTotalVenda(produtoCadastro.getValorSugerido(),
 				produtoSaida.getQuantidadeSaida()));
 
 		repository.save(produtoSaida);
@@ -73,7 +73,7 @@ public class SaidaServiceImpl implements SaidaService {
 	private CriarProdutoCadastroEntradaDto criarProdutoCadastroDTO(ProdutoCadastro produtoCadastro, Integer soma) {
 		CriarProdutoCadastroEntradaDto produtoDto = new CriarProdutoCadastroEntradaDto(produtoCadastro.getId(),
 				produtoCadastro.getCodigoDeBarras(), produtoCadastro.getNome(), produtoCadastro.getValorCompra(), soma,
-				produtoCadastro.getPorcentagemSobreVenda(), produtoCadastro.getValorVenda());
+				produtoCadastro.getPorcentagemSobreVenda(), produtoCadastro.getValorSugerido());
 		return produtoDto;
 	}
 }

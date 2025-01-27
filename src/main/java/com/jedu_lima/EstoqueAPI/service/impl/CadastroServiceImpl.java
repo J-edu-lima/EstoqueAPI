@@ -32,9 +32,9 @@ public class CadastroServiceImpl implements CadastroService {
 	@Override
 	public void cadastro(CriarProdutoCadastroEntradaDto produto) {
 		ProdutoCadastro produtoCadastro = ProdutoCadastroMapper.paraEntidade(produto);
-		BigDecimal valorVenda = calculoService.calcularValorVenda(produtoCadastro.getValorCompra(),
+		BigDecimal valorSugerido = calculoService.calcularValorVenda(produtoCadastro.getValorCompra(),
 				produtoCadastro.getPorcentagemSobreVenda());
-		produtoCadastro.setValorVenda(valorVenda);
+		produtoCadastro.setValorSugerido(valorSugerido);
 
 		repository.save(produtoCadastro);
 	}
@@ -81,15 +81,15 @@ public class CadastroServiceImpl implements CadastroService {
 		}
 		if (novoProduto.getPorcentagemSobreVenda() != null) {
 			produtoAtual.setPorcentagemSobreVenda(novoProduto.getPorcentagemSobreVenda());
-			BigDecimal valorVenda = calculoService.calcularValorVenda(produtoAtual.getValorCompra(),
+			BigDecimal valorSugerido = calculoService.calcularValorVenda(produtoAtual.getValorCompra(),
 					novoProduto.getPorcentagemSobreVenda());
-			produtoAtual.setValorVenda(valorVenda);
+			produtoAtual.setValorSugerido(valorSugerido);
 		}
 		if (novoProduto.getValorCompra() != null) {
 			produtoAtual.setValorCompra(novoProduto.getValorCompra());
-			BigDecimal valorVenda = calculoService.calcularValorVenda(novoProduto.getValorCompra(),
+			BigDecimal valorSugerido = calculoService.calcularValorVenda(novoProduto.getValorCompra(),
 					novoProduto.getPorcentagemSobreVenda());
-			produtoAtual.setValorVenda(valorVenda);
+			produtoAtual.setValorSugerido(valorSugerido);
 		}
 
 	}

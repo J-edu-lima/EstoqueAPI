@@ -29,7 +29,7 @@ public class ProdutoCadastro {
 	private Double porcentagemSobreVenda;
 
 	@Column(precision = 10, scale = 2)
-	private BigDecimal valorVenda;
+	private BigDecimal valorSugerido;
 
 	public ProdutoCadastro() {
 	}
@@ -92,12 +92,12 @@ public class ProdutoCadastro {
 		this.porcentagemSobreVenda = porcentagemSobreVenda;
 	}
 
-	public BigDecimal getValorVenda() {
-		return valorVenda;
+	public BigDecimal getValorSugerido() {
+		return valorSugerido;
 	}
 
-	public void setValorVenda(BigDecimal valorVenda) {
-		this.valorVenda = valorVenda;
+	public void setValorSugerido(BigDecimal valorSugerido) {
+		this.valorSugerido = valorSugerido;
 	}
 
 	@Override
