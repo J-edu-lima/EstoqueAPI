@@ -44,6 +44,15 @@ public class ProdutoCadastro {
 		this.porcentagemSobreVenda = porcentagemSobreVenda;
 	}
 
+	public ProdutoCadastro(Long codigoDeBarras, String nome, BigDecimal valorCompra, Integer quantidadeTotal,
+			Double porcentagemSobreVenda) {
+		this.codigoDeBarras = codigoDeBarras;
+		this.nome = nome;
+		this.valorCompra = valorCompra;
+		this.quantidadeTotal = quantidadeTotal;
+		this.porcentagemSobreVenda = porcentagemSobreVenda;
+	}
+
 	public Long getId() {
 		return id;
 	}
