@@ -15,7 +15,7 @@ import javax.swing.table.DefaultTableModel;
 import com.jedu_lima.EstoqueAPI.entity.ProdutoCadastro;
 import com.jedu_lima.EstoqueAPI.service.impl.UiService;
 
-public class InterfaceProdutos extends JFrame {
+public class InterfaceProdutos extends JFrame implements UiService.UiServiceCallback {
 	private static final long serialVersionUID = 1L;
 
 	private JTable table;
