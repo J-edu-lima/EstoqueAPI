@@ -1,6 +1,7 @@
 package com.jedu_lima.EstoqueAPI.view;
 
 import java.awt.BorderLayout;
+import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -32,8 +33,8 @@ public class InterfaceCadastroProduto extends JFrame implements UiService.UiServ
 		setSize(500, 400);
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setLayout(new BorderLayout());
-
+		setLayout(new BorderLayout()); 
+		
 		String[] colunas = { "ID", "Código De Barras", "Nome", "Preço De Compra", "Quantidade", "Preço De Venda",
 				"Porcentagem" };
 		tableModel = new DefaultTableModel(colunas, 0);
@@ -63,18 +64,29 @@ public class InterfaceCadastroProduto extends JFrame implements UiService.UiServ
 		painelCadastro.add(tfPorcentagem);
 
 		add(painelCadastro, BorderLayout.NORTH);
-
 		JPanel painelBotoes = new JPanel();
+		painelBotoes.setLayout(new FlowLayout(FlowLayout.CENTER)); 
+		
 		JButton btnCadastrarProduto = new JButton("Cadastrar Produto");
-		painelBotoes.add(btnCadastrarProduto);
-		add(painelBotoes, BorderLayout.SOUTH);
-
 		btnCadastrarProduto.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				salvarProduto();
 			}
 		});
+
+		JButton btnVoltar = new JButton("Voltar");
+		btnVoltar.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				openInterfacePrincipal();
+			}
+		});
+		
+		painelBotoes.add(btnCadastrarProduto);
+		painelBotoes.add(btnVoltar);
+		add(painelBotoes, BorderLayout.SOUTH);
+		
 		uiService = new UiService();
 	}
 
@@ -87,6 +99,12 @@ public class InterfaceCadastroProduto extends JFrame implements UiService.UiServ
 
 		ProdutoCadastro novoProduto = new ProdutoCadastro(codigoBarras, nome, precoCompra, quantidade, porcentagem);
 		uiService.cadastrarProduto(novoProduto, this);
+	}
+
+	private void openInterfacePrincipal() {
+		setVisible(false);
+		InterfacePrincipal telaPrincipal = new InterfacePrincipal();
+		telaPrincipal.setVisible(true);
 	}
 
 	@Override
