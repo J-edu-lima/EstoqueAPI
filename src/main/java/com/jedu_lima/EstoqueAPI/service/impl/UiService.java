@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.swing.JFrame;
 import javax.swing.JTable;
+import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
 
@@ -66,13 +67,40 @@ public class UiService extends JFrame {
 			public void run() {
 				try {
 					ClientApi clientApi = new ClientApi();
-					String resposta = clientApi.deletarProduto(id);
+					String resposta = clientApi.deleteDadosDaApi(id);
 
 					if ("Produto deletado com sucesso.".equals(resposta)) {
 						buscarDadosDaApi("http://localhost:8080/v1/produto", callback);
 					} else {
 						System.out.println("Falha ao deletar produto.");
 					}
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		}).start();
+	}
+
+	public void limparCampos(JTextField tfCodigoBarras, JTextField tfNome, JTextField tfPrecoCompra,
+			JTextField tfQuantidade, JTextField tfPorcentagem) {
+		tfCodigoBarras.setText("");
+		tfNome.setText("");
+		tfPrecoCompra.setText("");
+		tfQuantidade.setText("");
+		tfPorcentagem.setText("");
+	}
+
+	public void atualizarProduto(ProdutoCadastro produto, UiServiceCallback callback) {
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				try {
+					ClientApi clientApi = new ClientApi();
+					String url = "http://localhost:8080/v1/produto/" + produto.getId();
+					ObjectMapper objectMapper = new ObjectMapper();
+					String json = objectMapper.writeValueAsString(produto);
+					clientApi.putDadosParaApi(url, json);
+					buscarDadosDaApi("http://localhost:8080/v1/produto", callback);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}

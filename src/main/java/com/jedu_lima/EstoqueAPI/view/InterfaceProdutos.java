@@ -2,16 +2,23 @@ package com.jedu_lima.EstoqueAPI.view;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.math.BigDecimal;
 import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 
 import com.jedu_lima.EstoqueAPI.entity.ProdutoCadastro;
@@ -23,6 +30,7 @@ public class InterfaceProdutos extends JFrame implements UiService.UiServiceCall
 	private JTable table;
 	private DefaultTableModel tableModel;
 	private UiService uiService;
+	private JTextField tfCodigoBarras, tfNome, tfPrecoCompra, tfQuantidade, tfPorcentagem;
 
 	public InterfaceProdutos() {
 		setTitle("Produtos Cadastrados");
@@ -65,11 +73,67 @@ public class InterfaceProdutos extends JFrame implements UiService.UiServiceCall
 			}
 		});
 
-		painelBotoes.add(btnBuscarProdutos);
-		painelBotoes.add(btnVoltar);
-		painelBotoes.add(btnDeletarProduto);
-		add(painelBotoes, BorderLayout.SOUTH);
+		JButton btnAtualizarProduto = new JButton("Atualizar Produto");
+		btnAtualizarProduto.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				atualizarProdutoSelecionado();
+			}
+		});
 
+		JPanel painelEdicao = new JPanel(new GridLayout(7, 2));
+		painelEdicao.setVisible(true);
+
+		painelEdicao.add(new JLabel("Código de Barras:"));
+		tfCodigoBarras = new JTextField();
+		painelEdicao.add(tfCodigoBarras);
+
+		painelEdicao.add(new JLabel("Nome:"));
+		tfNome = new JTextField();
+		painelEdicao.add(tfNome);
+
+		painelEdicao.add(new JLabel("Preço de Compra:"));
+		tfPrecoCompra = new JTextField();
+		painelEdicao.add(tfPrecoCompra);
+
+		painelEdicao.add(new JLabel("Quantidade:"));
+		tfQuantidade = new JTextField();
+		painelEdicao.add(tfQuantidade);
+
+		painelEdicao.add(new JLabel("Porcentagem:"));
+		tfPorcentagem = new JTextField();
+		painelEdicao.add(tfPorcentagem);
+
+		add(painelEdicao, BorderLayout.NORTH);
+		table.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+			@Override
+			public void valueChanged(ListSelectionEvent e) {
+				if (!e.getValueIsAdjusting()) {
+					int selectedRow = table.getSelectedRow();
+					if (selectedRow != -1) {
+
+						Long codigoBarras = (Long) table.getValueAt(selectedRow, 1);
+						String nome = (String) table.getValueAt(selectedRow, 2);
+						BigDecimal precoCompra = (BigDecimal) table.getValueAt(selectedRow, 3);
+						Integer quantidade = (Integer) table.getValueAt(selectedRow, 4);
+						Double porcentagem = (Double) table.getValueAt(selectedRow, 6);
+
+						tfCodigoBarras.setText(codigoBarras.toString());
+						tfNome.setText(nome);
+						tfPrecoCompra.setText(precoCompra.toString());
+						tfQuantidade.setText(quantidade.toString());
+						tfPorcentagem.setText(porcentagem.toString());
+					}
+				}
+			}
+		});
+
+		painelBotoes.add(btnBuscarProdutos);
+		painelBotoes.add(btnDeletarProduto);
+		painelBotoes.add(btnAtualizarProduto);
+		painelBotoes.add(btnVoltar);
+
+		add(painelBotoes, BorderLayout.SOUTH);
 		uiService = new UiService();
 	}
 
@@ -90,6 +154,41 @@ public class InterfaceProdutos extends JFrame implements UiService.UiServiceCall
 			uiService.deletarProduto(produtoId, InterfaceProdutos.this);
 		} else {
 			System.out.println("Selecione um produto para deletar.");
+		}
+	}
+
+	private void atualizarProdutoSelecionado() {
+		int confirmation = JOptionPane.showConfirmDialog(this, "Você tem certeza que deseja atualizar este produto?",
+				"Confirmar Atualização", JOptionPane.YES_NO_OPTION);
+		if (confirmation == JOptionPane.YES_OPTION) {
+			
+			int selectedRow = table.getSelectedRow();
+			if (selectedRow != -1) {
+				Long produtoId = (Long) table.getValueAt(selectedRow, 0);
+				Long codigoBarras = Long.parseLong(tfCodigoBarras.getText());
+				String nome = tfNome.getText();
+				BigDecimal precoCompra = new BigDecimal(tfPrecoCompra.getText());
+				Integer quantidade = Integer.parseInt(tfQuantidade.getText());
+				Double porcentagem = Double.parseDouble(tfPorcentagem.getText());
+
+				ProdutoCadastro produto = new ProdutoCadastro();
+				produto.setId(produtoId);
+				produto.setCodigoDeBarras(codigoBarras);
+				produto.setNome(nome);
+				produto.setValorCompra(precoCompra);
+				produto.setQuantidadeTotal(quantidade);
+				produto.setPorcentagemSobreVenda(porcentagem);
+
+				uiService.atualizarProduto(produto, new UiService.UiServiceCallback() {
+					@Override
+					public void onProdutosFetched(List<ProdutoCadastro> listaDeProdutos) {
+						uiService.atualizarTabela(table, listaDeProdutos);
+						uiService.limparCampos(tfCodigoBarras, tfNome, tfPrecoCompra, tfQuantidade, tfPorcentagem);
+					}
+				});
+			}
+		} else {
+			System.out.println("Selecione um produto para atualizar.");
 		}
 	}
 

@@ -52,8 +52,8 @@ public class ClientApi {
 		}
 	}
 
-	public String deletarProduto(Long id) throws IOException {
-		
+	public String deleteDadosDaApi(Long id) throws IOException {
+
 		String url = "http://localhost:8080/v1/produto/" + id;
 		HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
 		connection.setRequestMethod("DELETE");
@@ -65,6 +65,38 @@ public class ClientApi {
 			return "Produto deletado com sucesso.";
 		} else {
 			return "Erro ao deletar produto.";
+		}
+	}
+
+	public String putDadosParaApi(String url, String json) {
+		try {
+			URL obj = new URL(url);
+			HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+			con.setRequestMethod("PUT");
+			con.setRequestProperty("Content-Type", "application/json");
+			con.setDoOutput(true);
+			try (OutputStream os = con.getOutputStream()) {
+				byte[] input = json.getBytes("utf-8");
+				os.write(input, 0, input.length);
+			}
+
+			int responseCode = con.getResponseCode();
+			if (responseCode == HttpURLConnection.HTTP_OK) {
+				BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+				String inputLine;
+				StringBuilder response = new StringBuilder();
+				while ((inputLine = in.readLine()) != null) {
+					response.append(inputLine);
+				}
+				in.close();
+				return response.toString();
+			} else {
+				System.out.println("Erro na atualização: " + responseCode);
+				return "";
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "";
 		}
 	}
 }
