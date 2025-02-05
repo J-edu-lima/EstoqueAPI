@@ -51,4 +51,20 @@ public class ClientApi {
 			return "Erro ao cadastrar produto: " + responseCode;
 		}
 	}
+
+	public String deletarProduto(Long id) throws IOException {
+		
+		String url = "http://localhost:8080/v1/produto/" + id;
+		HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
+		connection.setRequestMethod("DELETE");
+		connection.setConnectTimeout(5000);
+		connection.setReadTimeout(5000);
+
+		int responseCode = connection.getResponseCode();
+		if (responseCode == HttpURLConnection.HTTP_OK) {
+			return "Produto deletado com sucesso.";
+		} else {
+			return "Erro ao deletar produto.";
+		}
+	}
 }

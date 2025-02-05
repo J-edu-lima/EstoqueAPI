@@ -36,33 +36,53 @@ public class UiService extends JFrame {
 			}
 		}).start();
 	}
-	
-	  public void buscarDadosDaApi(String url, UiServiceCallback callback) {
-	        new Thread(new Runnable() {
-	            @Override
-	            public void run() {
-	                try {
-	                    ClientApi clientApi = new ClientApi();
-	                    String data = clientApi.getDadosDaApi(url);
-	                    ObjectMapper objectMapper = new ObjectMapper();
-	                    ProdutoCadastro[] produtos = objectMapper.readValue(data, ProdutoCadastro[].class);
 
-	                    SwingUtilities.invokeLater(new Runnable() {
-	                        @Override
-	                        public void run() {
-	                            callback.onProdutosFetched(List.of(produtos));
-	                        }
-	                    });
-	                } catch (Exception e) {
-	                    e.printStackTrace(); 
-	                }
-	            }
-	        }).start();
-	    }
+	public void buscarDadosDaApi(String url, UiServiceCallback callback) {
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				try {
+					ClientApi clientApi = new ClientApi();
+					String data = clientApi.getDadosDaApi(url);
+					ObjectMapper objectMapper = new ObjectMapper();
+					ProdutoCadastro[] produtos = objectMapper.readValue(data, ProdutoCadastro[].class);
 
+					SwingUtilities.invokeLater(new Runnable() {
+						@Override
+						public void run() {
+							callback.onProdutosFetched(List.of(produtos));
+						}
+					});
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		}).start();
+	}
+
+	public void deletarProduto(Long id, UiServiceCallback callback) {
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				try {
+					ClientApi clientApi = new ClientApi();
+					String resposta = clientApi.deletarProduto(id);
+
+					if ("Produto deletado com sucesso.".equals(resposta)) {
+						buscarDadosDaApi("http://localhost:8080/v1/produto", callback);
+					} else {
+						System.out.println("Falha ao deletar produto.");
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		}).start();
+	}
 
 	public void atualizarTabela(JTable table, List<ProdutoCadastro> listaDeProdutos) {
-		String[] colunas = { "ID", "Código De Barras", "Nome", "Preço De Compra", "Quantidade", "Preço De Venda","Porcentagem" };
+		String[] colunas = { "ID", "Código De Barras", "Nome", "Preço De Compra", "Quantidade", "Preço De Venda",
+				"Porcentagem" };
 		Object[][] dados = new Object[listaDeProdutos.size()][colunas.length];
 		for (int i = 0; i < listaDeProdutos.size(); i++) {
 			ProdutoCadastro produto = listaDeProdutos.get(i);
