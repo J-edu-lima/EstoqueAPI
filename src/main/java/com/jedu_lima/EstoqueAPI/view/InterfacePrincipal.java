@@ -31,17 +31,7 @@ public class InterfacePrincipal extends JFrame {
 			}
 		});
 
-		JButton btnCadastro = new JButton("Cadastrar Produtos");
-		btnCadastro.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				openInterfaceCadastroProduto();
-			}
-		});
-
 		painelBotoes.add(btnProdutos);
-		painelBotoes.add(btnCadastro);
-
 		add(painelBotoes, BorderLayout.SOUTH);
 	}
 
@@ -49,12 +39,6 @@ public class InterfacePrincipal extends JFrame {
 		setVisible(false);
 		InterfaceProdutos telaProdutos = new InterfaceProdutos();
 		telaProdutos.setVisible(true);
-	}
-
-	private void openInterfaceCadastroProduto() {
-		setVisible(false);
-		InterfaceCadastroProduto cadastroProdutos = new InterfaceCadastroProduto();
-		cadastroProdutos.setVisible(true);
 	}
 
 	public static void main(String[] args) {

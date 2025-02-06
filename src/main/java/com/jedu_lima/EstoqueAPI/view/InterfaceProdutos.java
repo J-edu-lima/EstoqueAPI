@@ -1,6 +1,7 @@
 package com.jedu_lima.EstoqueAPI.view;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -33,8 +34,9 @@ public class InterfaceProdutos extends JFrame implements UiService.UiServiceCall
 	private JTextField tfCodigoBarras, tfNome, tfPrecoCompra, tfQuantidade, tfPorcentagem;
 
 	public InterfaceProdutos() {
+
 		setTitle("Produtos Cadastrados");
-		setSize(500, 400);
+		setSize(600, 700);
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setLayout(new BorderLayout());
@@ -43,43 +45,12 @@ public class InterfaceProdutos extends JFrame implements UiService.UiServiceCall
 				"Porcentagem" };
 		tableModel = new DefaultTableModel(colunas, 0);
 		table = new JTable(tableModel);
+
 		JScrollPane scrollPane = new JScrollPane(table);
 		add(scrollPane, BorderLayout.CENTER);
-
-		JPanel painelBotoes = new JPanel();
-		painelBotoes.setLayout(new FlowLayout(FlowLayout.CENTER));
-
-		JButton btnBuscarProdutos = new JButton("Buscar Produtos");
-		btnBuscarProdutos.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				uiService.buscarDadosDaApi("http://localhost:8080/v1/produto", InterfaceProdutos.this);
-			}
-		});
-
-		JButton btnVoltar = new JButton("Voltar");
-		btnVoltar.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				openInterfacePrincipal();
-			}
-		});
-
-		JButton btnDeletarProduto = new JButton("Deletar Produto");
-		btnDeletarProduto.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				deletarProdutoSelecionado();
-			}
-		});
-
-		JButton btnAtualizarProduto = new JButton("Atualizar Produto");
-		btnAtualizarProduto.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				atualizarProdutoSelecionado();
-			}
-		});
+		table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+		table.getTableHeader().setResizingAllowed(true);
+		table.getTableHeader().setReorderingAllowed(true);
 
 		JPanel painelEdicao = new JPanel(new GridLayout(7, 2));
 		painelEdicao.setVisible(true);
@@ -105,6 +76,7 @@ public class InterfaceProdutos extends JFrame implements UiService.UiServiceCall
 		painelEdicao.add(tfPorcentagem);
 
 		add(painelEdicao, BorderLayout.NORTH);
+
 		table.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
 			@Override
 			public void valueChanged(ListSelectionEvent e) {
@@ -128,12 +100,59 @@ public class InterfaceProdutos extends JFrame implements UiService.UiServiceCall
 			}
 		});
 
-		painelBotoes.add(btnBuscarProdutos);
-		painelBotoes.add(btnDeletarProduto);
-		painelBotoes.add(btnAtualizarProduto);
-		painelBotoes.add(btnVoltar);
+		JPanel painelBotoes = new JPanel();
+		painelBotoes.setLayout(new FlowLayout(FlowLayout.CENTER));
 
+		JButton btnBuscarProdutos = new JButton("Buscar Produtos");
+		painelBotoes.add(btnBuscarProdutos);
+		btnBuscarProdutos.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				buscarProdutos();
+			}
+		});
+
+		JButton btnCadastrarProduto = new JButton("Cadastrar Produto");
+		painelBotoes.add(btnCadastrarProduto);
+		btnCadastrarProduto.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				salvarProduto();
+			}
+		});
+
+		JButton btnDeletarProduto = new JButton("Deletar Produto");
+		painelBotoes.add(btnDeletarProduto);
+		btnDeletarProduto.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				deletarProdutoSelecionado();
+			}
+		});
+
+		JButton btnAtualizarProduto = new JButton("Atualizar Produto");
+		painelBotoes.add(btnAtualizarProduto);
+		btnAtualizarProduto.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				atualizarProdutoSelecionado();
+			}
+		});
+
+		JButton btnVoltar = new JButton("Voltar");
+		painelBotoes.add(btnVoltar);
+		btnVoltar.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				openInterfacePrincipal();
+			}
+
+		});
+		
+		painelBotoes.setPreferredSize(new Dimension(800, 80));
+		painelBotoes.setMinimumSize(new Dimension(600, 60));
 		add(painelBotoes, BorderLayout.SOUTH);
+		
 		uiService = new UiService();
 	}
 
@@ -147,13 +166,37 @@ public class InterfaceProdutos extends JFrame implements UiService.UiServiceCall
 		uiService.atualizarTabela(table, listaDeProdutos);
 	}
 
+	private void buscarProdutos() {
+		uiService.buscarDadosDaApi("http://localhost:8080/v1/produto", InterfaceProdutos.this);
+	}
+
 	private void deletarProdutoSelecionado() {
-		int selectedRow = table.getSelectedRow();
-		if (selectedRow != -1) {
-			Long produtoId = (Long) table.getValueAt(selectedRow, 0);
-			uiService.deletarProduto(produtoId, InterfaceProdutos.this);
-		} else {
-			System.out.println("Selecione um produto para deletar.");
+		int confirmation = JOptionPane.showConfirmDialog(this, "Você tem certeza que deseja deletar este produto?",
+				"Confirmar Atualização", JOptionPane.YES_NO_OPTION);
+		if (confirmation == JOptionPane.YES_OPTION) {
+			int selectedRow = table.getSelectedRow();
+			if (selectedRow != -1) {
+				Long produtoId = (Long) table.getValueAt(selectedRow, 0);
+				uiService.deletarProduto(produtoId, InterfaceProdutos.this);
+			} else {
+				System.out.println("Selecione um produto para deletar.");
+			}
+		}
+	}
+
+	public void salvarProduto() {
+		int confirmation = JOptionPane.showConfirmDialog(this, "Você tem certeza que deseja cadastrar este produto?",
+				"Confirmar Atualização", JOptionPane.YES_NO_OPTION);
+		if (confirmation == JOptionPane.YES_OPTION) {
+
+			Long codigoBarras = Long.parseLong(tfCodigoBarras.getText());
+			String nome = tfNome.getText();
+			BigDecimal precoCompra = new BigDecimal(tfPrecoCompra.getText());
+			int quantidade = Integer.parseInt(tfQuantidade.getText());
+			double porcentagem = Double.parseDouble(tfPorcentagem.getText());
+
+			ProdutoCadastro novoProduto = new ProdutoCadastro(codigoBarras, nome, precoCompra, quantidade, porcentagem);
+			uiService.cadastrarProduto(novoProduto, this);
 		}
 	}
 
@@ -161,7 +204,7 @@ public class InterfaceProdutos extends JFrame implements UiService.UiServiceCall
 		int confirmation = JOptionPane.showConfirmDialog(this, "Você tem certeza que deseja atualizar este produto?",
 				"Confirmar Atualização", JOptionPane.YES_NO_OPTION);
 		if (confirmation == JOptionPane.YES_OPTION) {
-			
+
 			int selectedRow = table.getSelectedRow();
 			if (selectedRow != -1) {
 				Long produtoId = (Long) table.getValueAt(selectedRow, 0);
