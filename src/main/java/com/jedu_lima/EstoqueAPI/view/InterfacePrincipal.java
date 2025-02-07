@@ -1,13 +1,16 @@
 package com.jedu_lima.EstoqueAPI.view;
 
 import java.awt.BorderLayout;
-import java.awt.FlowLayout;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.JButton;
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
-import javax.swing.JPanel;
+import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import javax.swing.SwingUtilities;
 
 public class InterfacePrincipal extends JFrame {
@@ -18,21 +21,61 @@ public class InterfacePrincipal extends JFrame {
 		setSize(500, 400);
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setLayout(new BorderLayout());
 
-		JPanel painelBotoes = new JPanel();
-		painelBotoes.setLayout(new FlowLayout(FlowLayout.CENTER, 20, 10));
+		JMenuBar menuBar = new JMenuBar();
 
-		JButton btnProdutos = new JButton("Produtos Cadastrados");
-		btnProdutos.addActionListener(new ActionListener() {
+		JMenu menuProdutos = new JMenu("Produtos");
+		menuBar.add(menuProdutos);
+		JMenuItem itemProdutos = new JMenuItem("Produtos Cadastrados");
+		menuProdutos.add(itemProdutos);
+		itemProdutos.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				openInterfaceProdutos();
 			}
 		});
 
-		painelBotoes.add(btnProdutos);
-		add(painelBotoes, BorderLayout.SOUTH);
+		JMenu menuEntradas = new JMenu("Entradas");
+		menuBar.add(menuEntradas);
+		JMenuItem itemEntrada = new JMenuItem("Entrada de Produtos");
+		menuEntradas.add(itemEntrada);
+		itemEntrada.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				openInterfaceEntradas();
+			}
+		});
+
+		JMenu menuSaidas = new JMenu("Saidas");
+		menuBar.add(menuSaidas);
+
+		JMenu menuSair = new JMenu("Sair");
+		menuBar.add(menuSair);
+		JMenuItem itemSair = new JMenuItem("Sair");
+		menuSair.add(itemSair);
+		itemSair.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				System.exit(0);
+			}
+		});
+
+		setJMenuBar(menuBar);
+
+		ImageIcon imageIcon = new ImageIcon("C:\\java-libs\\gson-main\\5166970 1.png");
+		Image image = imageIcon.getImage();
+		Image scaledImage = image.getScaledInstance(256, 256, Image.SCALE_SMOOTH);
+		ImageIcon scaledIcon = new ImageIcon(scaledImage);
+		JLabel labelImagem = new JLabel(scaledIcon);
+
+		setLayout(new BorderLayout());
+		add(labelImagem, BorderLayout.CENTER);
+	}
+
+	private void openInterfaceEntradas() {
+		setVisible(false);
+		InterfaceEntradas telaEntradas = new InterfaceEntradas();
+		telaEntradas.setVisible(true);
 	}
 
 	private void openInterfaceProdutos() {

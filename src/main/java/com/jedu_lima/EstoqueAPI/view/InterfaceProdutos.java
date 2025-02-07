@@ -23,20 +23,20 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 
 import com.jedu_lima.EstoqueAPI.entity.ProdutoCadastro;
-import com.jedu_lima.EstoqueAPI.service.impl.UiService;
+import com.jedu_lima.EstoqueAPI.service.impl.UiServiceImpl;
 
-public class InterfaceProdutos extends JFrame implements UiService.UiServiceCallback {
+public class InterfaceProdutos extends JFrame implements UiServiceImpl.UiServiceCallback {
 	private static final long serialVersionUID = 1L;
 
 	private JTable table;
 	private DefaultTableModel tableModel;
-	private UiService uiService;
+	private UiServiceImpl uiService;
 	private JTextField tfCodigoBarras, tfNome, tfPrecoCompra, tfQuantidade, tfPorcentagem;
 
 	public InterfaceProdutos() {
 
 		setTitle("Produtos Cadastrados");
-		setSize(600, 700);
+		setSize(600, 600);
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setLayout(new BorderLayout());
@@ -45,12 +45,8 @@ public class InterfaceProdutos extends JFrame implements UiService.UiServiceCall
 				"Porcentagem" };
 		tableModel = new DefaultTableModel(colunas, 0);
 		table = new JTable(tableModel);
-
 		JScrollPane scrollPane = new JScrollPane(table);
 		add(scrollPane, BorderLayout.CENTER);
-		table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
-		table.getTableHeader().setResizingAllowed(true);
-		table.getTableHeader().setReorderingAllowed(true);
 
 		JPanel painelEdicao = new JPanel(new GridLayout(7, 2));
 		painelEdicao.setVisible(true);
@@ -151,9 +147,9 @@ public class InterfaceProdutos extends JFrame implements UiService.UiServiceCall
 		
 		painelBotoes.setPreferredSize(new Dimension(800, 80));
 		painelBotoes.setMinimumSize(new Dimension(600, 60));
-		add(painelBotoes, BorderLayout.SOUTH);
+		add(painelBotoes, BorderLayout.PAGE_END);
 		
-		uiService = new UiService();
+		uiService = new UiServiceImpl();
 	}
 
 	private void openInterfacePrincipal() {
@@ -197,6 +193,7 @@ public class InterfaceProdutos extends JFrame implements UiService.UiServiceCall
 
 			ProdutoCadastro novoProduto = new ProdutoCadastro(codigoBarras, nome, precoCompra, quantidade, porcentagem);
 			uiService.cadastrarProduto(novoProduto, this);
+			uiService.limparCampos(tfCodigoBarras, tfNome, tfPrecoCompra, tfQuantidade, tfPorcentagem);
 		}
 	}
 
@@ -222,7 +219,7 @@ public class InterfaceProdutos extends JFrame implements UiService.UiServiceCall
 				produto.setQuantidadeTotal(quantidade);
 				produto.setPorcentagemSobreVenda(porcentagem);
 
-				uiService.atualizarProduto(produto, new UiService.UiServiceCallback() {
+				uiService.atualizarProduto(produto, new UiServiceImpl.UiServiceCallback() {
 					@Override
 					public void onProdutosFetched(List<ProdutoCadastro> listaDeProdutos) {
 						uiService.atualizarTabela(table, listaDeProdutos);

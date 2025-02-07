@@ -12,7 +12,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jedu_lima.EstoqueAPI.client.ClientApi;
 import com.jedu_lima.EstoqueAPI.entity.ProdutoCadastro;
 
-public class UiService extends JFrame {
+public class UiServiceImpl extends JFrame {
 	private static final long serialVersionUID = 1L;
 
 	public interface UiServiceCallback {
