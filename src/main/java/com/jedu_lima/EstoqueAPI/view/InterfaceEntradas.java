@@ -18,7 +18,7 @@ import com.jedu_lima.EstoqueAPI.entity.ProdutoEntrada;
 import com.jedu_lima.EstoqueAPI.service.impl.UiEntradaServiceImpl;
 
 public class InterfaceEntradas extends JFrame implements UiEntradaServiceImpl.UiEntradaServiceCallback {
-	static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
 	private JTable table;
 	private DefaultTableModel tableModel;
@@ -48,16 +48,33 @@ public class InterfaceEntradas extends JFrame implements UiEntradaServiceImpl.Ui
 				buscarEntradas();
 			}
 		});
+
+		JButton btnVoltar = new JButton("Voltar");
+		painelBotoes.add(btnVoltar);
+		btnVoltar.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				openInterfacePrincipal();
+			}
+		});
+
 		add(painelBotoes, BorderLayout.SOUTH);
+		uiService = new UiEntradaServiceImpl();
 	}
 
-	private void buscarEntradas() {
-		uiService.buscarDadosDaApi("http://localhost:8080/v1/entrada", InterfaceEntradas.this);
+	private void openInterfacePrincipal() {
+		setVisible(false);
+		InterfacePrincipal telaPrincipal = new InterfacePrincipal();
+		telaPrincipal.setVisible(true);
 	}
 
 	public void onProdutosFetched(List<ProdutoEntrada> listaDeEntradas) {
 		uiService.atualizarTabela(table, listaDeEntradas);
 
+	}
+
+	private void buscarEntradas() {
+		uiService.buscarDadosDaApi("http://localhost:8080/v1/entrada", InterfaceEntradas.this);
 	}
 
 	public static void main(String[] args) {
