@@ -67,9 +67,9 @@ public class UiServiceImpl extends JFrame {
 			public void run() {
 				try {
 					ClientApi clientApi = new ClientApi();
-					String resposta = clientApi.deleteDadosDaApi(id);
+					String resposta = clientApi.deleteDadosDaApi("http://localhost:8080/v1/produto", id);
 
-					if ("Produto deletado com sucesso.".equals(resposta)) {
+					if ("Deletado com sucesso.".equals(resposta)) {
 						buscarDadosDaApi("http://localhost:8080/v1/produto", callback);
 					} else {
 						System.out.println("Falha ao deletar produto.");

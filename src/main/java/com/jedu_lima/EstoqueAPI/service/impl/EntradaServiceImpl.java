@@ -50,7 +50,7 @@ public class EntradaServiceImpl implements EntradaService {
 		ProdutoCadastro produtoCadastro = produtoEntrada.getProduto();
 		CriarProdutoCadastroEntradaDto produtoDto = criarProdutoCadastroDTO(produtoCadastro, calculoService
 				.quantidadeSubtracao(produtoEntrada.getQuantidadeEntrada(), produtoCadastro.getQuantidadeTotal()));
-		cadastroService.atualizar(produtoDto, id);
+		cadastroService.atualizar(produtoDto, produtoDto.id());
 
 		repository.deleteById(id);
 	}

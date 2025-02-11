@@ -8,6 +8,7 @@ import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -49,6 +50,15 @@ public class InterfaceEntradas extends JFrame implements UiEntradaServiceImpl.Ui
 			}
 		});
 
+		JButton btnDeletarEntrada = new JButton("Deletar Produto");
+		painelBotoes.add(btnDeletarEntrada);
+		btnDeletarEntrada.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				deletarEntradaSelecionado();
+			}
+		});
+
 		JButton btnVoltar = new JButton("Voltar");
 		painelBotoes.add(btnVoltar);
 		btnVoltar.addActionListener(new ActionListener() {
@@ -75,6 +85,20 @@ public class InterfaceEntradas extends JFrame implements UiEntradaServiceImpl.Ui
 
 	private void buscarEntradas() {
 		uiService.buscarDadosDaApi("http://localhost:8080/v1/entrada", InterfaceEntradas.this);
+	}
+
+	private void deletarEntradaSelecionado() {
+		int confirmation = JOptionPane.showConfirmDialog(this, "Você tem certeza que deseja deletar esta entrada?",
+				"Confirmar Atualização", JOptionPane.YES_NO_OPTION);
+		if (confirmation == JOptionPane.YES_OPTION) {
+			int selectedRow = table.getSelectedRow();
+			if (selectedRow != -1) {
+				Long entradaId = (Long) table.getValueAt(selectedRow, 0);
+				uiService.deletarEntrada(entradaId, InterfaceEntradas.this);
+			} else {
+				System.out.println("Selecione uma entrada para deletar.");
+			}
+		}
 	}
 
 	public static void main(String[] args) {

@@ -43,6 +43,26 @@ public class UiEntradaServiceImpl extends JFrame {
 		}).start();
 	}
 
+	public void deletarEntrada(Long id, UiEntradaServiceCallback callback) {
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				try {
+					ClientApi clientApi = new ClientApi();
+					String resposta = clientApi.deleteDadosDaApi("http://localhost:8080/v1/entrada", id);
+
+					if ("Deletado com sucesso.".equals(resposta)) {
+						buscarDadosDaApi("http://localhost:8080/v1/entrada", callback);
+					} else {
+						System.out.println("Falha ao deletar entrada.");
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		}).start();
+	}
+
 	public void atualizarTabela(JTable table, List<ProdutoEntrada> listaDeEntradas) {
 		String[] colunas = { "ID", "ID do Produto", "Quantidade de Entrada", "Data de Entrada" };
 		Object[][] dados = new Object[listaDeEntradas.size()][colunas.length];

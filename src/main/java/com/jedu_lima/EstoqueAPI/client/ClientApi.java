@@ -52,9 +52,9 @@ public class ClientApi {
 		}
 	}
 
-	public String deleteDadosDaApi(Long id) throws IOException {
+	public String deleteDadosDaApi(String Url, Long id) throws IOException {
 
-		String url = "http://localhost:8080/v1/produto/" + id;
+		String url = Url + "/" + id;
 		HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
 		connection.setRequestMethod("DELETE");
 		connection.setConnectTimeout(5000);
@@ -62,7 +62,7 @@ public class ClientApi {
 
 		int responseCode = connection.getResponseCode();
 		if (responseCode == HttpURLConnection.HTTP_OK) {
-			return "Produto deletado com sucesso.";
+			return "Deletado com sucesso.";
 		} else {
 			return "Erro ao deletar produto.";
 		}
