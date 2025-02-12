@@ -67,6 +67,26 @@ public class UiSaidaServiceImpl extends JFrame {
 		}).start();
 	}
 
+	public void deletarSaida(Long id, UiSaidaServiceCallback callback) {
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				try {
+					ClientApi clientApi = new ClientApi();
+					String resposta = clientApi.deleteDadosDaApi("http://localhost:8080/v1/saida", id);
+
+					if ("Deletado com sucesso.".equals(resposta)) {
+						buscarDadosDaApi("http://localhost:8080/v1/saida", callback);
+					} else {
+						System.out.println("Falha ao deletar saida.");
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		}).start();
+	}
+
 	public void limparCampos(JTextField tfIdDoProduto, JTextField tfQuantidadeSaida) {
 		tfIdDoProduto.setText("");
 		tfQuantidadeSaida.setText("");

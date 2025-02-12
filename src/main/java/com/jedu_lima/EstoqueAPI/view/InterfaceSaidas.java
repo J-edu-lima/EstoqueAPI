@@ -81,6 +81,15 @@ public class InterfaceSaidas extends JFrame implements UiSaidaServiceImpl.UiSaid
 			}
 		});
 
+		JButton btnDeletarSaida = new JButton("Deletar Saida");
+		painelBotoes.add(btnDeletarSaida);
+		btnDeletarSaida.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				deletarSaidaSelecionada();
+			}
+		});
+
 		JButton btnVoltar = new JButton("Voltar");
 		painelBotoes.add(btnVoltar);
 		btnVoltar.addActionListener(new ActionListener() {
@@ -124,6 +133,20 @@ public class InterfaceSaidas extends JFrame implements UiSaidaServiceImpl.UiSaid
 
 			uiSaidaService.cadastrarSaida(saida, idDoProduto, InterfaceSaidas.this);
 			uiSaidaService.limparCampos(tfIdDoProduto, tfQuantidadeSaida);
+		}
+	}
+
+	private void deletarSaidaSelecionada() {
+		int confirmation = JOptionPane.showConfirmDialog(this, "Você tem certeza que deseja deletar esta entrada?",
+				"Confirmar Atualização", JOptionPane.YES_NO_OPTION);
+		if (confirmation == JOptionPane.YES_OPTION) {
+			int selectedRow = table.getSelectedRow();
+			if (selectedRow != -1) {
+				Long saidaId = (Long) table.getValueAt(selectedRow, 0);
+				uiSaidaService.deletarSaida(saidaId, InterfaceSaidas.this);
+			} else {
+				System.out.println("Selecione uma entrada para deletar.");
+			}
 		}
 	}
 

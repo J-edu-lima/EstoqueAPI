@@ -105,6 +105,7 @@ public class InterfaceProdutos extends JFrame implements UiServiceImpl.UiService
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				buscarProdutos();
+				uiService.limparCampos(tfCodigoBarras, tfNome, tfPrecoCompra, tfQuantidade, tfPorcentagem);
 			}
 		});
 
