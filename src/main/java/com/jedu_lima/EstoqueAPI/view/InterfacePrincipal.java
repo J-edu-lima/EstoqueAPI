@@ -46,8 +46,16 @@ public class InterfacePrincipal extends JFrame {
 			}
 		});
 
-		JMenu menuSaidas = new JMenu("Saidas");
+		JMenu menuSaidas = new JMenu("Saídas");
 		menuBar.add(menuSaidas);
+		JMenuItem itemSaidas = new JMenuItem("Saída de Produtos");
+		menuSaidas.add(itemSaidas);
+		itemSaidas.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				openInterfaceSaidas();
+			}
+		});
 
 		JMenu menuSair = new JMenu("Sair");
 		menuBar.add(menuSair);
@@ -82,6 +90,12 @@ public class InterfacePrincipal extends JFrame {
 		setVisible(false);
 		InterfaceProdutos telaProdutos = new InterfaceProdutos();
 		telaProdutos.setVisible(true);
+	}
+
+	private void openInterfaceSaidas() {
+		setVisible(false);
+		InterfaceSaidas telaSaidas = new InterfaceSaidas();
+		telaSaidas.setVisible(true);
 	}
 
 	public static void main(String[] args) {
