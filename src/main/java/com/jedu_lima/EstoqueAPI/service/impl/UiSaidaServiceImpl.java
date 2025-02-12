@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.swing.JFrame;
 import javax.swing.JTable;
+import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
 
@@ -15,8 +16,10 @@ import com.jedu_lima.EstoqueAPI.entity.ProdutoSaida;
 public class UiSaidaServiceImpl extends JFrame {
 	private static final long serialVersionUID = 1L;
 
+	UiServiceImpl service;
+
 	public interface UiSaidaServiceCallback {
-		void onProdutosFetched(List<ProdutoSaida> listaDeEntradas);
+		void onProdutosFetched(List<ProdutoSaida> listaDeSaidas);
 	}
 
 	public void buscarDadosDaApi(String url, UiSaidaServiceCallback callback) {
@@ -41,6 +44,32 @@ public class UiSaidaServiceImpl extends JFrame {
 				}
 			}
 		}).start();
+	}
+
+	public void cadastrarSaida(ProdutoSaida saida, Long id, UiSaidaServiceCallback callback) {
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				try {
+					ClientApi clientApi = new ClientApi();
+					String url = "http://localhost:8080/v1/saida/" + id;
+					String urlCallback = "http://localhost:8080/v1/saida";
+					ObjectMapper objectMapper = new ObjectMapper();
+					objectMapper.registerModule(new JavaTimeModule());
+					String json = objectMapper.writeValueAsString(saida);
+
+					clientApi.postDadosParaApi(url, json);
+					buscarDadosDaApi(urlCallback, callback);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		}).start();
+	}
+
+	public void limparCampos(JTextField tfIdDoProduto, JTextField tfQuantidadeSaida) {
+		tfIdDoProduto.setText("");
+		tfQuantidadeSaida.setText("");
 	}
 
 	public void atualizarTabela(JTable table, List<ProdutoSaida> listaDeSaidas) {

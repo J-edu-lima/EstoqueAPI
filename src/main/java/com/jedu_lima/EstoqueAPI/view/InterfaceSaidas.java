@@ -2,27 +2,37 @@ package com.jedu_lima.EstoqueAPI.view;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
 
+import com.jedu_lima.EstoqueAPI.entity.ProdutoCadastro;
 import com.jedu_lima.EstoqueAPI.entity.ProdutoSaida;
 import com.jedu_lima.EstoqueAPI.service.impl.UiSaidaServiceImpl;
+import com.jedu_lima.EstoqueAPI.service.impl.UiServiceImpl;
 
 public class InterfaceSaidas extends JFrame implements UiSaidaServiceImpl.UiSaidaServiceCallback {
 	private static final long serialVersionUID = 1L;
 
 	private JTable table;
 	private DefaultTableModel tableModel;
+	private UiServiceImpl uiService;
 	private UiSaidaServiceImpl uiSaidaService;
+	private JTextField tfIdDoProduto, tfQuantidadeSaida;
 
 	public InterfaceSaidas() {
 		setTitle("Saída de Produtos");
@@ -37,6 +47,19 @@ public class InterfaceSaidas extends JFrame implements UiSaidaServiceImpl.UiSaid
 		JScrollPane scrollPane = new JScrollPane(table);
 		add(scrollPane, BorderLayout.CENTER);
 
+		JPanel painelEdicao = new JPanel(new GridLayout(3, 2));
+		painelEdicao.setVisible(true);
+
+		painelEdicao.add(new JLabel("ID do Produto:"));
+		tfIdDoProduto = new JTextField();
+		painelEdicao.add(tfIdDoProduto);
+
+		painelEdicao.add(new JLabel("Quantidade de Saida:"));
+		tfQuantidadeSaida = new JTextField();
+		painelEdicao.add(tfQuantidadeSaida);
+
+		add(painelEdicao, BorderLayout.NORTH);
+
 		JPanel painelBotoes = new JPanel();
 		painelBotoes.setLayout(new FlowLayout(FlowLayout.CENTER));
 
@@ -46,6 +69,15 @@ public class InterfaceSaidas extends JFrame implements UiSaidaServiceImpl.UiSaid
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				buscarSaidas();
+			}
+		});
+
+		JButton btnAdicionarSaidas = new JButton("Adicionar Saida");
+		painelBotoes.add(btnAdicionarSaidas);
+		btnAdicionarSaidas.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				salvarSaidas();
 			}
 		});
 
@@ -60,11 +92,12 @@ public class InterfaceSaidas extends JFrame implements UiSaidaServiceImpl.UiSaid
 
 		add(painelBotoes, BorderLayout.SOUTH);
 		uiSaidaService = new UiSaidaServiceImpl();
+		uiService = new UiServiceImpl();
 	}
 
 	@Override
-	public void onProdutosFetched(List<ProdutoSaida> listaDeEntradas) {
-		uiSaidaService.atualizarTabela(table, listaDeEntradas);
+	public void onProdutosFetched(List<ProdutoSaida> listaDeSaidas) {
+		uiSaidaService.atualizarTabela(table, listaDeSaidas);
 	}
 
 	private void openInterfacePrincipal() {
@@ -75,6 +108,23 @@ public class InterfaceSaidas extends JFrame implements UiSaidaServiceImpl.UiSaid
 
 	private void buscarSaidas() {
 		uiSaidaService.buscarDadosDaApi("http://localhost:8080/v1/saida", InterfaceSaidas.this);
+	}
+
+	private void salvarSaidas() {
+		int confirmation = JOptionPane.showConfirmDialog(this,
+				"Você tem certeza que deseja adicionar esta saida de produto?", "Confirmar Atualização",
+				JOptionPane.YES_NO_OPTION);
+		if (confirmation == JOptionPane.YES_OPTION) {
+
+			Long idDoProduto = Long.parseLong(tfIdDoProduto.getText());
+			int quantidadeSaida = Integer.parseInt(tfQuantidadeSaida.getText());
+			BigDecimal valor = null;
+			ProdutoCadastro produto = uiService.buscarDadosPorId("http://localhost:8080/v1/produto", idDoProduto);
+			ProdutoSaida saida = new ProdutoSaida(produto, quantidadeSaida, valor, LocalDate.now());
+
+			uiSaidaService.cadastrarSaida(saida, idDoProduto, InterfaceSaidas.this);
+			uiSaidaService.limparCampos(tfIdDoProduto, tfQuantidadeSaida);
+		}
 	}
 
 	public static void main(String[] args) {
