@@ -1,5 +1,6 @@
 package com.jedu_lima.EstoqueAPI.service.impl;
 
+import java.io.IOException;
 import java.util.List;
 
 import javax.swing.JFrame;
@@ -59,6 +60,20 @@ public class UiServiceImpl extends JFrame {
 				}
 			}
 		}).start();
+	}
+
+	public ProdutoCadastro buscarDadosPorId(String url, Long id) {
+		ProdutoCadastro produto = null;
+		ClientApi clientApi = new ClientApi();
+		String data;
+		try {
+			data = clientApi.getDadosDaApi(url + "/" + id);
+			ObjectMapper objectMapper = new ObjectMapper();
+			produto = objectMapper.readValue(data, ProdutoCadastro.class);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return produto;
 	}
 
 	public void deletarProduto(Long id, UiServiceCallback callback) {
