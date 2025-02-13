@@ -17,9 +17,11 @@ public class ProdutoCadastro {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-
+	
+	@Column(unique = true)
 	private Long codigoDeBarras;
-
+	
+	@Column(unique = true)
 	private String nome;
 
 	private BigDecimal valorCompra;

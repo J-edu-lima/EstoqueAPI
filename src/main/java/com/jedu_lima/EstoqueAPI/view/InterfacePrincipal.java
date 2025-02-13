@@ -70,7 +70,7 @@ public class InterfacePrincipal extends JFrame {
 
 		setJMenuBar(menuBar);
 
-		ImageIcon imageIcon = new ImageIcon("C:\\java-libs\\gson-main\\5166970 1.png");
+		ImageIcon imageIcon = new ImageIcon("C:\\ws-sts\\EstoqueAPI\\EstoqueAPI\\images\\5166970 1.png");
 		Image image = imageIcon.getImage();
 		Image scaledImage = image.getScaledInstance(256, 256, Image.SCALE_SMOOTH);
 		ImageIcon scaledIcon = new ImageIcon(scaledImage);
