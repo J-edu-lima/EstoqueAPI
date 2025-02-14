@@ -21,6 +21,7 @@ public class UiServiceImpl extends JFrame {
 	}
 
 	public void cadastrarProduto(ProdutoCadastro produto, UiServiceCallback callback) {
+
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
@@ -40,6 +41,7 @@ public class UiServiceImpl extends JFrame {
 	}
 
 	public void buscarDadosDaApi(String url, UiServiceCallback callback) {
+		
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
@@ -63,6 +65,7 @@ public class UiServiceImpl extends JFrame {
 	}
 
 	public ProdutoCadastro buscarDadosPorId(String url, Long id) {
+		
 		ProdutoCadastro produto = null;
 		ClientApi clientApi = new ClientApi();
 		String data;
@@ -77,6 +80,7 @@ public class UiServiceImpl extends JFrame {
 	}
 
 	public void deletarProduto(Long id, UiServiceCallback callback) {
+		
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
@@ -98,6 +102,7 @@ public class UiServiceImpl extends JFrame {
 
 	public void limparCampos(JTextField tfCodigoBarras, JTextField tfNome, JTextField tfPrecoCompra,
 			JTextField tfQuantidade, JTextField tfPorcentagem) {
+		
 		tfCodigoBarras.setText("");
 		tfNome.setText("");
 		tfPrecoCompra.setText("");
@@ -106,6 +111,7 @@ public class UiServiceImpl extends JFrame {
 	}
 
 	public void atualizarProduto(ProdutoCadastro produto, UiServiceCallback callback) {
+		
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
@@ -124,6 +130,7 @@ public class UiServiceImpl extends JFrame {
 	}
 
 	public void atualizarTabela(JTable table, List<ProdutoCadastro> listaDeProdutos) {
+		
 		String[] colunas = { "ID", "Código De Barras", "Nome", "Preço De Compra", "Quantidade", "Preço De Venda",
 				"Porcentagem" };
 		Object[][] dados = new Object[listaDeProdutos.size()][colunas.length];

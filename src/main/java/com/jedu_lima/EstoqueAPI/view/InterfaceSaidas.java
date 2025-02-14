@@ -24,6 +24,7 @@ import com.jedu_lima.EstoqueAPI.entity.ProdutoCadastro;
 import com.jedu_lima.EstoqueAPI.entity.ProdutoSaida;
 import com.jedu_lima.EstoqueAPI.service.impl.UiSaidaServiceImpl;
 import com.jedu_lima.EstoqueAPI.service.impl.UiServiceImpl;
+import com.jedu_lima.EstoqueAPI.service.impl.VerificacaoServiceImpl;
 
 public class InterfaceSaidas extends JFrame implements UiSaidaServiceImpl.UiSaidaServiceCallback {
 	private static final long serialVersionUID = 1L;
@@ -32,6 +33,7 @@ public class InterfaceSaidas extends JFrame implements UiSaidaServiceImpl.UiSaid
 	private DefaultTableModel tableModel;
 	private UiServiceImpl uiService;
 	private UiSaidaServiceImpl uiSaidaService;
+	private VerificacaoServiceImpl verificar;
 	private JTextField tfIdDoProduto, tfQuantidadeSaida;
 
 	public InterfaceSaidas() {
@@ -102,6 +104,7 @@ public class InterfaceSaidas extends JFrame implements UiSaidaServiceImpl.UiSaid
 		add(painelBotoes, BorderLayout.SOUTH);
 		uiSaidaService = new UiSaidaServiceImpl();
 		uiService = new UiServiceImpl();
+		verificar = new VerificacaoServiceImpl();
 	}
 
 	@Override
@@ -129,10 +132,19 @@ public class InterfaceSaidas extends JFrame implements UiSaidaServiceImpl.UiSaid
 			int quantidadeSaida = Integer.parseInt(tfQuantidadeSaida.getText());
 			BigDecimal valor = null;
 			ProdutoCadastro produto = uiService.buscarDadosPorId("http://localhost:8080/v1/produto", idDoProduto);
-			ProdutoSaida saida = new ProdutoSaida(produto, quantidadeSaida, valor, LocalDate.now());
 
-			uiSaidaService.cadastrarSaida(saida, idDoProduto, InterfaceSaidas.this);
-			uiSaidaService.limparCampos(tfIdDoProduto, tfQuantidadeSaida);
+			if (produto == null) {
+				JOptionPane.showMessageDialog(null, "Produto Não Encontrado", "Aviso", JOptionPane.WARNING_MESSAGE);
+			} else {
+				ProdutoSaida saida = new ProdutoSaida(produto, quantidadeSaida, valor, LocalDate.now());
+				if (verificar.verificarQuantidadeParaVenda(saida.getQuantidadeSaida(), produto.getQuantidadeTotal())) {
+					JOptionPane.showMessageDialog(null, "Quantidade Insuficiente no Estoque", "Aviso",
+							JOptionPane.WARNING_MESSAGE);
+				} else {
+					uiSaidaService.cadastrarSaida(saida, idDoProduto, InterfaceSaidas.this);
+					uiSaidaService.limparCampos(tfIdDoProduto, tfQuantidadeSaida);
+				}
+			}
 		}
 	}
 

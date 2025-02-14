@@ -16,13 +16,14 @@ import com.jedu_lima.EstoqueAPI.entity.ProdutoSaida;
 public class UiSaidaServiceImpl extends JFrame {
 	private static final long serialVersionUID = 1L;
 
-	UiServiceImpl service;
+	UiServiceImpl service = new UiServiceImpl();
 
 	public interface UiSaidaServiceCallback {
 		void onProdutosFetched(List<ProdutoSaida> listaDeSaidas);
 	}
 
 	public void buscarDadosDaApi(String url, UiSaidaServiceCallback callback) {
+
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
@@ -44,9 +45,11 @@ public class UiSaidaServiceImpl extends JFrame {
 				}
 			}
 		}).start();
+
 	}
 
 	public void cadastrarSaida(ProdutoSaida saida, Long id, UiSaidaServiceCallback callback) {
+
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
@@ -68,6 +71,7 @@ public class UiSaidaServiceImpl extends JFrame {
 	}
 
 	public void deletarSaida(Long id, UiSaidaServiceCallback callback) {
+
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
@@ -88,11 +92,13 @@ public class UiSaidaServiceImpl extends JFrame {
 	}
 
 	public void limparCampos(JTextField tfIdDoProduto, JTextField tfQuantidadeSaida) {
+
 		tfIdDoProduto.setText("");
 		tfQuantidadeSaida.setText("");
 	}
 
 	public void atualizarTabela(JTable table, List<ProdutoSaida> listaDeSaidas) {
+
 		String[] colunas = { "ID", "ID do Produto", "Quantidade de Saída", "Total da Venda", "Data de Saida" };
 		Object[][] dados = new Object[listaDeSaidas.size()][colunas.length];
 		for (int i = 0; i < listaDeSaidas.size(); i++) {
