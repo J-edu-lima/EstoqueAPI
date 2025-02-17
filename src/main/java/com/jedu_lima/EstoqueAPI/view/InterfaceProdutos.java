@@ -7,6 +7,7 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.math.BigDecimal;
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.List;
 
 import javax.swing.JButton;
@@ -24,6 +25,7 @@ import javax.swing.table.DefaultTableModel;
 
 import com.jedu_lima.EstoqueAPI.entity.ProdutoCadastro;
 import com.jedu_lima.EstoqueAPI.service.impl.UiServiceImpl;
+import com.jedu_lima.EstoqueAPI.service.impl.VerificacaoServiceImpl;
 
 public class InterfaceProdutos extends JFrame implements UiServiceImpl.UiServiceCallback {
 	private static final long serialVersionUID = 1L;
@@ -31,6 +33,7 @@ public class InterfaceProdutos extends JFrame implements UiServiceImpl.UiService
 	private JTable table;
 	private DefaultTableModel tableModel;
 	private UiServiceImpl uiService;
+	private VerificacaoServiceImpl verificar;
 	private JTextField tfCodigoBarras, tfNome, tfPrecoCompra, tfQuantidade, tfPorcentagem;
 
 	public InterfaceProdutos() {
@@ -114,7 +117,11 @@ public class InterfaceProdutos extends JFrame implements UiServiceImpl.UiService
 		btnCadastrarProduto.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				salvarProduto();
+				try {
+					salvarProduto();
+				} catch (SQLIntegrityConstraintViolationException e1) {
+					e1.getErrorCode();
+				}
 			}
 		});
 
@@ -145,12 +152,13 @@ public class InterfaceProdutos extends JFrame implements UiServiceImpl.UiService
 			}
 
 		});
-		
+
 		painelBotoes.setPreferredSize(new Dimension(800, 80));
 		painelBotoes.setMinimumSize(new Dimension(600, 60));
 		add(painelBotoes, BorderLayout.PAGE_END);
-		
+
 		uiService = new UiServiceImpl();
+		verificar = new VerificacaoServiceImpl();
 	}
 
 	private void openInterfacePrincipal() {
@@ -181,7 +189,7 @@ public class InterfaceProdutos extends JFrame implements UiServiceImpl.UiService
 		}
 	}
 
-	public void salvarProduto() {
+	public void salvarProduto() throws SQLIntegrityConstraintViolationException {
 		int confirmation = JOptionPane.showConfirmDialog(this, "Você tem certeza que deseja cadastrar este produto?",
 				"Confirmar Atualização", JOptionPane.YES_NO_OPTION);
 		if (confirmation == JOptionPane.YES_OPTION) {
@@ -190,11 +198,16 @@ public class InterfaceProdutos extends JFrame implements UiServiceImpl.UiService
 			String nome = tfNome.getText();
 			BigDecimal precoCompra = new BigDecimal(tfPrecoCompra.getText());
 			int quantidade = Integer.parseInt(tfQuantidade.getText());
-			double porcentagem = Double.parseDouble(tfPorcentagem.getText());
+			Double porcentagem = Double.parseDouble(tfPorcentagem.getText());
 
-			ProdutoCadastro novoProduto = new ProdutoCadastro(codigoBarras, nome, precoCompra, quantidade, porcentagem);
-			uiService.cadastrarProduto(novoProduto, this);
-			uiService.limparCampos(tfCodigoBarras, tfNome, tfPrecoCompra, tfQuantidade, tfPorcentagem);
+			if (verificar.verificarNumeroNegativo(precoCompra, porcentagem, quantidade)) {
+				JOptionPane.showMessageDialog(null, "Dados Inválidos", "Aviso", JOptionPane.WARNING_MESSAGE);
+			} else {
+				ProdutoCadastro novoProduto = new ProdutoCadastro(codigoBarras, nome, precoCompra, quantidade,
+						porcentagem);
+				uiService.cadastrarProduto(novoProduto, this);
+				uiService.limparCampos(tfCodigoBarras, tfNome, tfPrecoCompra, tfQuantidade, tfPorcentagem);
+			}
 		}
 	}
 

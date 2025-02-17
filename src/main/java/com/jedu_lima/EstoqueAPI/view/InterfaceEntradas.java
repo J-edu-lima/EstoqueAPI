@@ -127,10 +127,16 @@ public class InterfaceEntradas extends JFrame implements UiEntradaServiceImpl.Ui
 			Long idDoProduto = Long.parseLong(tfIdDoProduto.getText());
 			int quantidadeEntrada = Integer.parseInt(tfQuantidadeEntrada.getText());
 			ProdutoCadastro produto = uiService.buscarDadosPorId("http://localhost:8080/v1/produto", idDoProduto);
-			ProdutoEntrada entrada = new ProdutoEntrada(produto, quantidadeEntrada, LocalDate.now());
 
-			uiEntradaService.cadastrarEntrada(entrada, idDoProduto, InterfaceEntradas.this);
-			uiEntradaService.limparCampos(tfIdDoProduto, tfQuantidadeEntrada);
+			if (produto == null) {
+
+				JOptionPane.showMessageDialog(null, "Produto Não Encontrado", "Aviso", JOptionPane.WARNING_MESSAGE);
+			} else {
+				ProdutoEntrada entrada = new ProdutoEntrada(produto, quantidadeEntrada, LocalDate.now());
+
+				uiEntradaService.cadastrarEntrada(entrada, idDoProduto, InterfaceEntradas.this);
+				uiEntradaService.limparCampos(tfIdDoProduto, tfQuantidadeEntrada);
+			}
 		}
 	}
 

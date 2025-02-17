@@ -1,32 +1,39 @@
 package com.jedu_lima.EstoqueAPI.service.impl;
 
 import java.math.BigDecimal;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+
+import com.jedu_lima.EstoqueAPI.entity.ProdutoCadastro;
 
 public class VerificacaoServiceImpl {
 
-	public boolean verificarNome(String nome1, String nome2) {
-		return (nome1.contentEquals(nome2));
+	@Autowired
+	CadastroServiceImpl service;
+
+	public boolean verificarNome(String nome, Long codigo) {
+
+		List<ProdutoCadastro> produtos = service.buscarTodos();
+		for (ProdutoCadastro produto : produtos) {
+			if (nome.equals(produto.getNome()) || codigo.equals(produto.getCodigoDeBarras())) {
+				return true;
+			}
+		}
+		return false;
 	}
 
-	public boolean verificarCodigoBarras(Long codigo1, Long codigo2) {
-		return codigo1.equals(codigo2);
+	public boolean verificarNumeroNegativo(BigDecimal numeroValor, Double numeroPorcentagem, Integer numeroQuantidade) {
+		BigDecimal novaPorcentagem = new BigDecimal(numeroPorcentagem);
+		BigDecimal novaQuantidade = new BigDecimal(numeroQuantidade);
+
+		if (numeroValor.signum() == -1 || novaPorcentagem.signum() == -1 || novaQuantidade.signum() == -1) {
+			return true;
+		}
+		return false;
 	}
 
-	public boolean verificarNumeroNegativo(BigDecimal numero) {
-		return numero.signum() == -1;
-	}
-
-	public boolean verificarNumeroNegativo(Double numero) {
-		BigDecimal novoNumero = new BigDecimal(numero);
-		return novoNumero.signum() == -1;
-	}
-
-	public boolean verificarNumeroNegativo(Integer numero) {
-		BigDecimal novoNumero = new BigDecimal(numero);
-		return novoNumero.signum() == -1;
-	}
-
-	public boolean verfiicarPorcentagem(Double numero) {
+	public boolean verificarPorcentagem(Double numero) {
 		BigDecimal novoNumero = new BigDecimal(numero);
 		return novoNumero.signum() >= 100;
 	}
