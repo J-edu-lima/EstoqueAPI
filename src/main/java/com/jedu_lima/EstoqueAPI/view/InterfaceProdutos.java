@@ -13,7 +13,6 @@ import java.util.List;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -24,16 +23,14 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 
 import com.jedu_lima.EstoqueAPI.entity.ProdutoCadastro;
-import com.jedu_lima.EstoqueAPI.service.impl.UiServiceImpl;
-import com.jedu_lima.EstoqueAPI.service.impl.VerificacaoServiceImpl;
+import com.jedu_lima.EstoqueAPI.service.impl.UiProdutoServiceImpl;
 
-public class InterfaceProdutos extends JFrame implements UiServiceImpl.UiServiceCallback {
+public class InterfaceProdutos extends JFrame implements UiProdutoServiceImpl.UiServiceCallback {
 	private static final long serialVersionUID = 1L;
 
 	private JTable table;
 	private DefaultTableModel tableModel;
-	private UiServiceImpl uiService;
-	private VerificacaoServiceImpl verificar;
+	private UiProdutoServiceImpl uiService;
 	private JTextField tfCodigoBarras, tfNome, tfPrecoCompra, tfQuantidade, tfPorcentagem;
 
 	public InterfaceProdutos() {
@@ -157,8 +154,8 @@ public class InterfaceProdutos extends JFrame implements UiServiceImpl.UiService
 		painelBotoes.setMinimumSize(new Dimension(600, 60));
 		add(painelBotoes, BorderLayout.PAGE_END);
 
-		uiService = new UiServiceImpl();
-		verificar = new VerificacaoServiceImpl();
+		uiService = new UiProdutoServiceImpl();
+
 	}
 
 	private void openInterfacePrincipal() {
@@ -176,74 +173,18 @@ public class InterfaceProdutos extends JFrame implements UiServiceImpl.UiService
 	}
 
 	private void deletarProdutoSelecionado() {
-		int confirmation = JOptionPane.showConfirmDialog(this, "Você tem certeza que deseja deletar este produto?",
-				"Confirmar Atualização", JOptionPane.YES_NO_OPTION);
-		if (confirmation == JOptionPane.YES_OPTION) {
-			int selectedRow = table.getSelectedRow();
-			if (selectedRow != -1) {
-				Long produtoId = (Long) table.getValueAt(selectedRow, 0);
-				uiService.deletarProduto(produtoId, InterfaceProdutos.this);
-			} else {
-				System.out.println("Selecione um produto para deletar.");
-			}
-		}
+		uiService.deletarProdutoSelecionado(table, InterfaceProdutos.this);
 	}
 
 	public void salvarProduto() throws SQLIntegrityConstraintViolationException {
-		int confirmation = JOptionPane.showConfirmDialog(this, "Você tem certeza que deseja cadastrar este produto?",
-				"Confirmar Atualização", JOptionPane.YES_NO_OPTION);
-		if (confirmation == JOptionPane.YES_OPTION) {
+		uiService.salvarProduto(tfCodigoBarras, tfNome, tfPrecoCompra, tfQuantidade, tfPorcentagem,
+				InterfaceProdutos.this);
 
-			Long codigoBarras = Long.parseLong(tfCodigoBarras.getText());
-			String nome = tfNome.getText();
-			BigDecimal precoCompra = new BigDecimal(tfPrecoCompra.getText());
-			int quantidade = Integer.parseInt(tfQuantidade.getText());
-			Double porcentagem = Double.parseDouble(tfPorcentagem.getText());
-
-			if (verificar.verificarNumeroNegativo(precoCompra, porcentagem, quantidade)) {
-				JOptionPane.showMessageDialog(null, "Dados Inválidos", "Aviso", JOptionPane.WARNING_MESSAGE);
-			} else {
-				ProdutoCadastro novoProduto = new ProdutoCadastro(codigoBarras, nome, precoCompra, quantidade,
-						porcentagem);
-				uiService.cadastrarProduto(novoProduto, this);
-				uiService.limparCampos(tfCodigoBarras, tfNome, tfPrecoCompra, tfQuantidade, tfPorcentagem);
-			}
-		}
 	}
 
 	private void atualizarProdutoSelecionado() {
-		int confirmation = JOptionPane.showConfirmDialog(this, "Você tem certeza que deseja atualizar este produto?",
-				"Confirmar Atualização", JOptionPane.YES_NO_OPTION);
-		if (confirmation == JOptionPane.YES_OPTION) {
-
-			int selectedRow = table.getSelectedRow();
-			if (selectedRow != -1) {
-				Long produtoId = (Long) table.getValueAt(selectedRow, 0);
-				Long codigoBarras = Long.parseLong(tfCodigoBarras.getText());
-				String nome = tfNome.getText();
-				BigDecimal precoCompra = new BigDecimal(tfPrecoCompra.getText());
-				Integer quantidade = Integer.parseInt(tfQuantidade.getText());
-				Double porcentagem = Double.parseDouble(tfPorcentagem.getText());
-
-				ProdutoCadastro produto = new ProdutoCadastro();
-				produto.setId(produtoId);
-				produto.setCodigoDeBarras(codigoBarras);
-				produto.setNome(nome);
-				produto.setValorCompra(precoCompra);
-				produto.setQuantidadeTotal(quantidade);
-				produto.setPorcentagemSobreVenda(porcentagem);
-
-				uiService.atualizarProduto(produto, new UiServiceImpl.UiServiceCallback() {
-					@Override
-					public void onProdutosFetched(List<ProdutoCadastro> listaDeProdutos) {
-						uiService.atualizarTabela(table, listaDeProdutos);
-						uiService.limparCampos(tfCodigoBarras, tfNome, tfPrecoCompra, tfQuantidade, tfPorcentagem);
-					}
-				});
-			}
-		} else {
-			System.out.println("Selecione um produto para atualizar.");
-		}
+		uiService.atualizarProdutoSelecionado(table, tfCodigoBarras, tfNome, tfPrecoCompra, tfQuantidade, tfPorcentagem,
+				InterfaceProdutos.this);
 	}
 
 	public static void main(String[] args) {

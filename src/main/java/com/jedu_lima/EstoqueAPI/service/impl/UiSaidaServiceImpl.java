@@ -1,8 +1,10 @@
 package com.jedu_lima.EstoqueAPI.service.impl;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
@@ -11,12 +13,14 @@ import javax.swing.table.DefaultTableModel;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.jedu_lima.EstoqueAPI.client.ClientApi;
+import com.jedu_lima.EstoqueAPI.entity.ProdutoCadastro;
 import com.jedu_lima.EstoqueAPI.entity.ProdutoSaida;
 
 public class UiSaidaServiceImpl extends JFrame {
 	private static final long serialVersionUID = 1L;
 
-	UiServiceImpl service = new UiServiceImpl();
+	private UiProdutoServiceImpl uiService;
+	private VerificacaoServiceImpl verificar;
 
 	public interface UiSaidaServiceCallback {
 		void onProdutosFetched(List<ProdutoSaida> listaDeSaidas);
@@ -89,6 +93,49 @@ public class UiSaidaServiceImpl extends JFrame {
 				}
 			}
 		}).start();
+	}
+
+	public void salvarSaidas(JTextField tfIdDoProduto, JTextField tfQuantidadeSaida, UiSaidaServiceCallback callback) {
+
+		uiService = new UiProdutoServiceImpl();
+		verificar = new VerificacaoServiceImpl();
+		int confirmation = JOptionPane.showConfirmDialog(null,
+				"Você tem certeza que deseja adicionar esta saida de produto?", "Confirmar Atualização",
+				JOptionPane.YES_NO_OPTION);
+		if (confirmation == JOptionPane.YES_OPTION) {
+
+			Long idDoProduto = Long.parseLong(tfIdDoProduto.getText());
+			int quantidadeSaida = Integer.parseInt(tfQuantidadeSaida.getText());
+			ProdutoCadastro produto = uiService.buscarDadosPorId("http://localhost:8080/v1/produto", idDoProduto);
+
+			if (produto == null) {
+				JOptionPane.showMessageDialog(null, "Produto Não Encontrado", "Aviso", JOptionPane.WARNING_MESSAGE);
+			} else {
+				ProdutoSaida saida = new ProdutoSaida(produto, quantidadeSaida, null, LocalDate.now());
+				if (verificar.verificarQuantidadeParaVenda(saida.getQuantidadeSaida(), produto.getQuantidadeTotal())) {
+					JOptionPane.showMessageDialog(null, "Quantidade Insuficiente no Estoque", "Aviso",
+							JOptionPane.WARNING_MESSAGE);
+				} else {
+					cadastrarSaida(saida, idDoProduto, callback);
+					limparCampos(tfIdDoProduto, tfQuantidadeSaida);
+				}
+			}
+		}
+	}
+
+	public void deletarSaidaSelecionada(JTable table, UiSaidaServiceCallback callback) {
+
+		int confirmation = JOptionPane.showConfirmDialog(null, "Você tem certeza que deseja deletar esta saida?",
+				"Confirmar Atualização", JOptionPane.YES_NO_OPTION);
+		if (confirmation == JOptionPane.YES_OPTION) {
+			int selectedRow = table.getSelectedRow();
+			if (selectedRow != -1) {
+				Long saidaId = (Long) table.getValueAt(selectedRow, 0);
+				deletarSaida(saidaId, callback);
+			} else {
+				System.out.println("Selecione uma entrada para deletar.");
+			}
+		}
 	}
 
 	public void limparCampos(JTextField tfIdDoProduto, JTextField tfQuantidadeSaida) {

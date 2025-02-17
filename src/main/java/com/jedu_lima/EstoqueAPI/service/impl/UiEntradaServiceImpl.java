@@ -1,8 +1,10 @@
 package com.jedu_lima.EstoqueAPI.service.impl;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
@@ -11,18 +13,20 @@ import javax.swing.table.DefaultTableModel;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.jedu_lima.EstoqueAPI.client.ClientApi;
+import com.jedu_lima.EstoqueAPI.entity.ProdutoCadastro;
 import com.jedu_lima.EstoqueAPI.entity.ProdutoEntrada;
 
 public class UiEntradaServiceImpl extends JFrame {
 	private static final long serialVersionUID = 1L;
 
-	UiServiceImpl service;
+	private UiProdutoServiceImpl uiService;
 
 	public interface UiEntradaServiceCallback {
 		void onProdutosFetched(List<ProdutoEntrada> listaDeEntradas);
 	}
 
 	public void buscarDadosDaApi(String url, UiEntradaServiceCallback callback) {
+	
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
@@ -47,6 +51,7 @@ public class UiEntradaServiceImpl extends JFrame {
 	}
 
 	public void cadastrarEntrada(ProdutoEntrada entrada, Long id, UiEntradaServiceCallback callback) {
+		
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
@@ -68,6 +73,7 @@ public class UiEntradaServiceImpl extends JFrame {
 	}
 
 	public void deletarEntrada(Long id, UiEntradaServiceCallback callback) {
+		
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
@@ -87,12 +93,51 @@ public class UiEntradaServiceImpl extends JFrame {
 		}).start();
 	}
 
+	public void salvarEntrada(JTextField tfIdDoProduto, JTextField tfQuantidadeEntrada,
+			UiEntradaServiceCallback callback) {
+
+		uiService = new UiProdutoServiceImpl();
+		int confirmation = JOptionPane.showConfirmDialog(null,
+				"Você tem certeza que deseja adicionar esta entrada de produto?", "Confirmar Atualização",
+				JOptionPane.YES_NO_OPTION);
+		if (confirmation == JOptionPane.YES_OPTION) {
+			Long idDoProduto = Long.parseLong(tfIdDoProduto.getText());
+			int quantidadeEntrada = Integer.parseInt(tfQuantidadeEntrada.getText());
+			ProdutoCadastro produto = uiService.buscarDadosPorId("http://localhost:8080/v1/produto", idDoProduto);
+
+			if (produto == null) {
+				JOptionPane.showMessageDialog(null, "Produto Não Encontrado", "Aviso", JOptionPane.WARNING_MESSAGE);
+			} else {
+				ProdutoEntrada entrada = new ProdutoEntrada(produto, quantidadeEntrada, LocalDate.now());
+				cadastrarEntrada(entrada, idDoProduto, callback);
+				limparCampos(tfIdDoProduto, tfQuantidadeEntrada);
+			}
+		}
+	}
+
+	public void deletarEntradaSelecionada(JTable table, UiEntradaServiceCallback callback) {
+
+		int confirmation = JOptionPane.showConfirmDialog(null, "Você tem certeza que deseja deletar esta entrada?",
+				"Confirmar Atualização", JOptionPane.YES_NO_OPTION);
+		if (confirmation == JOptionPane.YES_OPTION) {
+			int selectedRow = table.getSelectedRow();
+			if (selectedRow != -1) {
+				Long entradaId = (Long) table.getValueAt(selectedRow, 0);
+				deletarEntrada(entradaId, callback);
+			} else {
+				System.out.println("Selecione uma entrada para deletar.");
+			}
+		}
+	}
+
 	public void limparCampos(JTextField tfIdDoProduto, JTextField tfQuantidadeEntrada) {
+		
 		tfIdDoProduto.setText("");
 		tfQuantidadeEntrada.setText("");
 	}
 
 	public void atualizarTabela(JTable table, List<ProdutoEntrada> listaDeEntradas) {
+		
 		String[] colunas = { "ID", "ID do Produto", "Quantidade de Entrada", "Data de Entrada" };
 		Object[][] dados = new Object[listaDeEntradas.size()][colunas.length];
 		for (int i = 0; i < listaDeEntradas.size(); i++) {

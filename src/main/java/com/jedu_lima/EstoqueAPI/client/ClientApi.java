@@ -46,9 +46,9 @@ public class ClientApi {
 
 		int responseCode = connection.getResponseCode();
 		if (responseCode == HttpURLConnection.HTTP_OK) {
-			return "Produto cadastrado com sucesso!";
+			return "Cadastrado com sucesso!";
 		} else {
-			return "Erro ao cadastrar produto: " + responseCode;
+			return "Erro ao cadastrar: " + responseCode;
 		}
 	}
 

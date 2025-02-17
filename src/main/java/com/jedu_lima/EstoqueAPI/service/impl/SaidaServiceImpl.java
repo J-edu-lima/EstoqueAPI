@@ -52,7 +52,7 @@ public class SaidaServiceImpl implements SaidaService {
 		ProdutoCadastro produtoCadastro = produtoSaida.getProduto();
 		CriarProdutoCadastroEntradaDto produtoDto = criarProdutoCadastroDTO(produtoCadastro,
 				calculoService.quantidadeSoma(produtoSaida.getQuantidadeSaida(), produtoCadastro.getQuantidadeTotal()));
-		cadastroService.atualizar(produtoDto, id);
+		cadastroService.atualizar(produtoDto, produtoDto.id());
 
 		repository.deleteById(id);
 	}

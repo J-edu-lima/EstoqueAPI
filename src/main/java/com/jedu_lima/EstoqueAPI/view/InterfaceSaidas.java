@@ -5,14 +5,11 @@ import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -20,20 +17,15 @@ import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
 
-import com.jedu_lima.EstoqueAPI.entity.ProdutoCadastro;
 import com.jedu_lima.EstoqueAPI.entity.ProdutoSaida;
 import com.jedu_lima.EstoqueAPI.service.impl.UiSaidaServiceImpl;
-import com.jedu_lima.EstoqueAPI.service.impl.UiServiceImpl;
-import com.jedu_lima.EstoqueAPI.service.impl.VerificacaoServiceImpl;
 
 public class InterfaceSaidas extends JFrame implements UiSaidaServiceImpl.UiSaidaServiceCallback {
 	private static final long serialVersionUID = 1L;
 
 	private JTable table;
 	private DefaultTableModel tableModel;
-	private UiServiceImpl uiService;
 	private UiSaidaServiceImpl uiSaidaService;
-	private VerificacaoServiceImpl verificar;
 	private JTextField tfIdDoProduto, tfQuantidadeSaida;
 
 	public InterfaceSaidas() {
@@ -102,9 +94,8 @@ public class InterfaceSaidas extends JFrame implements UiSaidaServiceImpl.UiSaid
 		});
 
 		add(painelBotoes, BorderLayout.SOUTH);
+		
 		uiSaidaService = new UiSaidaServiceImpl();
-		uiService = new UiServiceImpl();
-		verificar = new VerificacaoServiceImpl();
 	}
 
 	@Override
@@ -123,43 +114,11 @@ public class InterfaceSaidas extends JFrame implements UiSaidaServiceImpl.UiSaid
 	}
 
 	private void salvarSaidas() {
-		int confirmation = JOptionPane.showConfirmDialog(this,
-				"Você tem certeza que deseja adicionar esta saida de produto?", "Confirmar Atualização",
-				JOptionPane.YES_NO_OPTION);
-		if (confirmation == JOptionPane.YES_OPTION) {
-
-			Long idDoProduto = Long.parseLong(tfIdDoProduto.getText());
-			int quantidadeSaida = Integer.parseInt(tfQuantidadeSaida.getText());
-			BigDecimal valor = null;
-			ProdutoCadastro produto = uiService.buscarDadosPorId("http://localhost:8080/v1/produto", idDoProduto);
-
-			if (produto == null) {
-				JOptionPane.showMessageDialog(null, "Produto Não Encontrado", "Aviso", JOptionPane.WARNING_MESSAGE);
-			} else {
-				ProdutoSaida saida = new ProdutoSaida(produto, quantidadeSaida, valor, LocalDate.now());
-				if (verificar.verificarQuantidadeParaVenda(saida.getQuantidadeSaida(), produto.getQuantidadeTotal())) {
-					JOptionPane.showMessageDialog(null, "Quantidade Insuficiente no Estoque", "Aviso",
-							JOptionPane.WARNING_MESSAGE);
-				} else {
-					uiSaidaService.cadastrarSaida(saida, idDoProduto, InterfaceSaidas.this);
-					uiSaidaService.limparCampos(tfIdDoProduto, tfQuantidadeSaida);
-				}
-			}
-		}
+		uiSaidaService.salvarSaidas(tfIdDoProduto, tfQuantidadeSaida, InterfaceSaidas.this);
 	}
 
 	private void deletarSaidaSelecionada() {
-		int confirmation = JOptionPane.showConfirmDialog(this, "Você tem certeza que deseja deletar esta entrada?",
-				"Confirmar Atualização", JOptionPane.YES_NO_OPTION);
-		if (confirmation == JOptionPane.YES_OPTION) {
-			int selectedRow = table.getSelectedRow();
-			if (selectedRow != -1) {
-				Long saidaId = (Long) table.getValueAt(selectedRow, 0);
-				uiSaidaService.deletarSaida(saidaId, InterfaceSaidas.this);
-			} else {
-				System.out.println("Selecione uma entrada para deletar.");
-			}
-		}
+		uiSaidaService.deletarSaidaSelecionada(table, InterfaceSaidas.this);
 	}
 
 	public static void main(String[] args) {

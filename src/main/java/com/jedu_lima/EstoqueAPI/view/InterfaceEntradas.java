@@ -5,13 +5,11 @@ import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.time.LocalDate;
 import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -19,10 +17,8 @@ import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
 
-import com.jedu_lima.EstoqueAPI.entity.ProdutoCadastro;
 import com.jedu_lima.EstoqueAPI.entity.ProdutoEntrada;
 import com.jedu_lima.EstoqueAPI.service.impl.UiEntradaServiceImpl;
-import com.jedu_lima.EstoqueAPI.service.impl.UiServiceImpl;
 
 public class InterfaceEntradas extends JFrame implements UiEntradaServiceImpl.UiEntradaServiceCallback {
 	private static final long serialVersionUID = 1L;
@@ -30,7 +26,6 @@ public class InterfaceEntradas extends JFrame implements UiEntradaServiceImpl.Ui
 	private JTable table;
 	private DefaultTableModel tableModel;
 	private UiEntradaServiceImpl uiEntradaService;
-	private UiServiceImpl uiService;
 	private JTextField tfIdDoProduto, tfQuantidadeEntrada;
 
 	public InterfaceEntradas() {
@@ -99,8 +94,8 @@ public class InterfaceEntradas extends JFrame implements UiEntradaServiceImpl.Ui
 		});
 
 		add(painelBotoes, BorderLayout.SOUTH);
+	
 		uiEntradaService = new UiEntradaServiceImpl();
-		uiService = new UiServiceImpl();
 	}
 
 	private void openInterfacePrincipal() {
@@ -119,39 +114,11 @@ public class InterfaceEntradas extends JFrame implements UiEntradaServiceImpl.Ui
 	}
 
 	public void salvarEntrada() {
-		int confirmation = JOptionPane.showConfirmDialog(this,
-				"Você tem certeza que deseja adicionar esta entrada de produto?", "Confirmar Atualização",
-				JOptionPane.YES_NO_OPTION);
-		if (confirmation == JOptionPane.YES_OPTION) {
-
-			Long idDoProduto = Long.parseLong(tfIdDoProduto.getText());
-			int quantidadeEntrada = Integer.parseInt(tfQuantidadeEntrada.getText());
-			ProdutoCadastro produto = uiService.buscarDadosPorId("http://localhost:8080/v1/produto", idDoProduto);
-
-			if (produto == null) {
-
-				JOptionPane.showMessageDialog(null, "Produto Não Encontrado", "Aviso", JOptionPane.WARNING_MESSAGE);
-			} else {
-				ProdutoEntrada entrada = new ProdutoEntrada(produto, quantidadeEntrada, LocalDate.now());
-
-				uiEntradaService.cadastrarEntrada(entrada, idDoProduto, InterfaceEntradas.this);
-				uiEntradaService.limparCampos(tfIdDoProduto, tfQuantidadeEntrada);
-			}
-		}
+		uiEntradaService.salvarEntrada(tfIdDoProduto, tfQuantidadeEntrada, InterfaceEntradas.this);
 	}
 
 	private void deletarEntradaSelecionado() {
-		int confirmation = JOptionPane.showConfirmDialog(this, "Você tem certeza que deseja deletar esta entrada?",
-				"Confirmar Atualização", JOptionPane.YES_NO_OPTION);
-		if (confirmation == JOptionPane.YES_OPTION) {
-			int selectedRow = table.getSelectedRow();
-			if (selectedRow != -1) {
-				Long entradaId = (Long) table.getValueAt(selectedRow, 0);
-				uiEntradaService.deletarEntrada(entradaId, InterfaceEntradas.this);
-			} else {
-				System.out.println("Selecione uma entrada para deletar.");
-			}
-		}
+		uiEntradaService.deletarEntradaSelecionada(table, InterfaceEntradas.this);
 	}
 
 	public static void main(String[] args) {
