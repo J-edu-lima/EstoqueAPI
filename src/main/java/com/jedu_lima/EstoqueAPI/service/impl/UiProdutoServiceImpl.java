@@ -41,6 +41,8 @@ public class UiProdutoServiceImpl extends JFrame {
 
 					if ("Cadastrado com sucesso!".equals(resposta)) {
 						buscarDadosDaApi("http://localhost:8080/v1/produto", callback);
+						JOptionPane.showMessageDialog(null, "Produto Cadastrado", "Sucesso!",
+								JOptionPane.WARNING_MESSAGE);
 					} else {
 						System.out.println("Falha ao cadastrar.");
 						JOptionPane.showMessageDialog(null,
@@ -105,6 +107,8 @@ public class UiProdutoServiceImpl extends JFrame {
 
 					if ("Deletado com sucesso.".equals(resposta)) {
 						buscarDadosDaApi("http://localhost:8080/v1/produto", callback);
+						JOptionPane.showMessageDialog(null, "Produto Deletado", "Sucesso!",
+								JOptionPane.WARNING_MESSAGE);
 					} else {
 						System.out.println("Falha ao deletar produto.");
 						JOptionPane.showMessageDialog(null,

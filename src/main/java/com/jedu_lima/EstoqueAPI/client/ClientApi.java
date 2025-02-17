@@ -45,10 +45,10 @@ public class ClientApi {
 		}
 
 		int responseCode = connection.getResponseCode();
-		if (responseCode == HttpURLConnection.HTTP_OK) {
+		if (responseCode == HttpURLConnection.HTTP_CREATED) {
 			return "Cadastrado com sucesso!";
 		} else {
-			return "Erro ao cadastrar: " + responseCode;
+			return "Erro ao cadastrar.";
 		}
 	}
 
@@ -64,7 +64,7 @@ public class ClientApi {
 		if (responseCode == HttpURLConnection.HTTP_OK) {
 			return "Deletado com sucesso.";
 		} else {
-			return "Erro ao deletar produto.";
+			return "Erro ao deletar.";
 		}
 	}
 

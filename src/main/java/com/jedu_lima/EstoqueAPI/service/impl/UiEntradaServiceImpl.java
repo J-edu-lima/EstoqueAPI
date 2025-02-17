@@ -26,7 +26,7 @@ public class UiEntradaServiceImpl extends JFrame {
 	}
 
 	public void buscarDadosDaApi(String url, UiEntradaServiceCallback callback) {
-	
+
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
@@ -51,20 +51,27 @@ public class UiEntradaServiceImpl extends JFrame {
 	}
 
 	public void cadastrarEntrada(ProdutoEntrada entrada, Long id, UiEntradaServiceCallback callback) {
-		
+
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
 				try {
 					ClientApi clientApi = new ClientApi();
 					String url = "http://localhost:8080/v1/entrada/" + id;
-					String urlCallback = "http://localhost:8080/v1/entrada";
 					ObjectMapper objectMapper = new ObjectMapper();
 					objectMapper.registerModule(new JavaTimeModule());
 					String json = objectMapper.writeValueAsString(entrada);
 
-					clientApi.postDadosParaApi(url, json);
-					buscarDadosDaApi(urlCallback, callback);
+					String resposta = clientApi.postDadosParaApi(url, json);
+					if ("Cadastrado com sucesso!".equals(resposta)) {
+						buscarDadosDaApi("http://localhost:8080/v1/entrada", callback);
+						JOptionPane.showMessageDialog(null, "Entrada Cadastrada", "Sucesso!",
+								JOptionPane.WARNING_MESSAGE);
+					} else {
+						System.out.println("Falha ao cadastrar.");
+						JOptionPane.showMessageDialog(null, "Falha Ao Cadastrar Entrada", "Aviso",
+								JOptionPane.WARNING_MESSAGE);
+					}
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -73,7 +80,7 @@ public class UiEntradaServiceImpl extends JFrame {
 	}
 
 	public void deletarEntrada(Long id, UiEntradaServiceCallback callback) {
-		
+
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
@@ -82,9 +89,13 @@ public class UiEntradaServiceImpl extends JFrame {
 					String resposta = clientApi.deleteDadosDaApi("http://localhost:8080/v1/entrada", id);
 
 					if ("Deletado com sucesso.".equals(resposta)) {
+						JOptionPane.showMessageDialog(null, "Entrada Deletada", "Sucesso!",
+								JOptionPane.WARNING_MESSAGE);
 						buscarDadosDaApi("http://localhost:8080/v1/entrada", callback);
 					} else {
 						System.out.println("Falha ao deletar entrada.");
+						JOptionPane.showMessageDialog(null, "Falha Ao Deletar Entrada!", "Aviso",
+								JOptionPane.WARNING_MESSAGE);
 					}
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -131,13 +142,13 @@ public class UiEntradaServiceImpl extends JFrame {
 	}
 
 	public void limparCampos(JTextField tfIdDoProduto, JTextField tfQuantidadeEntrada) {
-		
+
 		tfIdDoProduto.setText("");
 		tfQuantidadeEntrada.setText("");
 	}
 
 	public void atualizarTabela(JTable table, List<ProdutoEntrada> listaDeEntradas) {
-		
+
 		String[] colunas = { "ID", "ID do Produto", "Quantidade de Entrada", "Data de Entrada" };
 		Object[][] dados = new Object[listaDeEntradas.size()][colunas.length];
 		for (int i = 0; i < listaDeEntradas.size(); i++) {

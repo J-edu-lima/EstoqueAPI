@@ -60,13 +60,20 @@ public class UiSaidaServiceImpl extends JFrame {
 				try {
 					ClientApi clientApi = new ClientApi();
 					String url = "http://localhost:8080/v1/saida/" + id;
-					String urlCallback = "http://localhost:8080/v1/saida";
 					ObjectMapper objectMapper = new ObjectMapper();
 					objectMapper.registerModule(new JavaTimeModule());
 					String json = objectMapper.writeValueAsString(saida);
 
-					clientApi.postDadosParaApi(url, json);
-					buscarDadosDaApi(urlCallback, callback);
+					String resposta = clientApi.postDadosParaApi(url, json);
+					if ("Cadastrado com sucesso!".equals(resposta)) {
+						buscarDadosDaApi("http://localhost:8080/v1/saida", callback);
+						JOptionPane.showMessageDialog(null, "Saida Cadastrada", "Sucesso!",
+								JOptionPane.WARNING_MESSAGE);
+					} else {
+						System.out.println("Falha ao cadastrar.");
+						JOptionPane.showMessageDialog(null, "Falha Ao Cadastrar Saída", "Aviso",
+								JOptionPane.WARNING_MESSAGE);
+					}
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -85,8 +92,11 @@ public class UiSaidaServiceImpl extends JFrame {
 
 					if ("Deletado com sucesso.".equals(resposta)) {
 						buscarDadosDaApi("http://localhost:8080/v1/saida", callback);
+						JOptionPane.showMessageDialog(null, "Saída Deletada", "Sucesso!", JOptionPane.WARNING_MESSAGE);
 					} else {
-						System.out.println("Falha ao deletar saida.");
+						System.out.println("Falha ao deletar produto.");
+						JOptionPane.showMessageDialog(null, "Falha Ao Deletar Saída!", "Aviso",
+								JOptionPane.WARNING_MESSAGE);
 					}
 				} catch (Exception e) {
 					e.printStackTrace();
