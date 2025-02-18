@@ -1,47 +1,183 @@
-# MVP de Estoque
+# EstoqueAPI
 
-## Descrição
+## DOCUMENTAÇÃO
 
-Este projeto é uma API de gerenciamento de estoque, projetada para facilitar o controle de produtos para pequenos lojistas. A API permite registrar, atualizar, buscar e deletar produtos, além de gerenciar entradas e saídas de estoque. Um dos diferenciais desta API é o sistema de cálculo automático, que permite ao usuário inserir uma porcentagem sobre o custo do produto e receber o valor de venda, bem como o valor das saídas conforme a quantidade vendida.
+### Resumo
 
-## Funcionalidades
+**EstoqueAPI** é uma API de gerenciamento de estoque, projetada para facilitar o controle de produtos para pequenos lojistas. O sistema permite realizar operações essenciais, como **registrar, atualizar, buscar e deletar produtos**, além de **gerenciar entradas e saídas de produtos**. A API também oferece um método de cálculo que **precifica automaticamente os produtos** ao serem cadastrados no sistema.
 
-- **Registrar Produtos**: Adiciona novos produtos ao estoque utilizando o seu código de barras, nome, valor de compra, quantidade total e porcentagem sobre venda como informações básicas.
-- **Atualizar Produtos**: Modifique as informações dos produtos já cadastrados, podendo modificar todas de uma vez ou somente uma (com exceção do preço de venda).
-- **Buscar Produtos**: Consulte detalhes dos produtos no estoque, incluindo busca pelas entradas e saidas.
-- **Deletar Produtos**: Remova produtos do estoque quando necessário.
-- **Gerenciar Entradas e Saídas**: Registre a entrada e a saída de produtos do estoque.
-- **Cálculo Automático**: Insira uma porcentagem sobre venda para obter automaticamente o valor de venda do produto.
+### Funcionalidades
 
-## Tecnologias Utilizadas
+- **Cadastro de Produtos**: Adiciona novos produtos ao estoque.
+- **Entrada de Produtos**: Registra a entrada de novos produtos no estoque.
+- **Saída de Produtos**: Gerencia a saída de produtos do estoque.
+- **Precificação Automática**: O sistema aplica regras de precificação com base em porcentagens sobre o valor do produto.
 
-- [Spring Boot](https://spring.io/projects/spring-boot) - Framework para construção de APIs Java.
-- [Microsoft SQL Server (MSSQL)](https://www.microsoft.com/en-us/sql-server/sql-server-downloads) - Sistema de gerenciamento de banco de dados, que permite integração com o Power BI para maior controle de estoque.
+### Tecnologias Utilizadas
 
-1. **Clone o repositório**: Faça uma cópia do projeto para o seu computador.
+- **Spring JPA**: Framework para persistência de dados utilizando JPA.
+- **MySQL**: Banco de dados relacional para armazenar dados do estoque.
+- **JFrame**: Interface gráfica para interação com o usuário.
+- **Postman**: Ferramenta para testar as rotas da API e interações com o sistema.
+
+### Pré-Requisitos
+
+- **Java 17+**: Certifique-se de ter a versão 17 ou superior do Java.
+- **Banco de Dados Relacional**: MySQL (ou outro banco de dados relacional) para persistir os dados.
+- **IDE**: IntelliJ IDEA, Eclipse ou qualquer outra IDE de sua escolha.
+  
+---
+
+### Estrutura de Diretórios
+
+A estrutura do projeto segue a arquitetura **MVC (Model-View-Controller)** e é organizada conforme abaixo:
+
+```
+/src
+ └── /main
+     └── /java
+         └── /jedu_lima
+             └── /EstoqueAPI
+                 ├── /client                   # Responsável por interações com a API externa
+                 │   ├── ClientAPI.java         # Classe de conexão da interface com a API
+                 ├── /controller               # Lida com as requisições HTTP e lógica do controlador
+                 │   ├── ProdutoCadastroController.java
+                 │   ├── ProdutoEntradaController.java
+                 │   ├── ProdutoSaidaController.java
+                 ├── /entity                   # Contém as entidades do modelo de dados
+                 │   ├── ProdutoCadastro.java
+                 │   ├── ProdutoEntrada.java
+                 │   ├── ProdutoSaida.java
+                 ├── /model                    # Contém os DTOs e o mapeamento entre eles e as entidades
+                 │   ├── /mapper                # Contém as classes responsáveis por mapear DTOs para entidades
+                 │   │   ├── ProdutoCadastroMapper.java
+                 │   │   ├── ProdutoEntradaMapper.java
+                 │   │   ├── ProdutoSaidaMapper.java
+                 │   ├── CriarProdutoCadastroEntradaDTO.java
+                 │   ├── CriarProdutoEntradaDTO.java
+                 │   ├── CriarProdutoSaidaDTO.java
+                 ├── /repository               # Contém as interfaces de repositórios (extensão do JPARepository)
+                 │   ├── ProdutoCadastroRepository.java
+                 │   ├── ProdutoEntradaRepository.java
+                 │   ├── ProdutoSaidaRepository.java
+                 ├── /service                  # Contém as interfaces e implementações das regras de negócio
+                 │   ├── /impl                 # Contém as implementações das interfaces de serviço
+                 │   │   ├── CadastroServiceImpl.java
+                 │   │   ├── CalculoServiceImpl.java
+                 │   │   ├── EntradaServiceImpl.java
+                 │   │   ├── UiEntradaServiceImpl.java
+                 │   │   ├── UiProdutoServiceImpl.java
+                 │   │   ├── UiSaidaServiceImpl.java
+                 │   │   ├── VerificacaoServiceImpl.java
+                 │   ├── CadastroService.java
+                 │   ├── CalculoService.java
+                 │   ├── EntradaService.java
+                 │   ├── SaidaService.java
+                 ├── /view                     # Contém as classes relacionadas à interface do usuário
+                 │   ├── InterfaceEntradas.java
+                 │   ├── InterfacePrincipal.java  # Tela principal, que leva às outras telas
+                 │   ├── InterfaceProdutos.java
+                 │   ├── InterfaceSaidas.java
+```
+
+---
+
+### Dependências
+
+As principais dependências utilizadas no projeto estão listadas no arquivo `pom.xml` e incluem:
+
+- **Spring Boot Starter Data JPA**
+- **Spring Boot Starter Web**
+- **DevTools**
+- **MySQL Connector**
+- **Jackson e FasterXML**
+
+Essas dependências são essenciais para o funcionamento do sistema e interações com o banco de dados.
+
+---
+
+### Instalação e Execução
+
+1. **Clone o repositório**:
    ```bash
-   git clone git@github.com:J-edu-lima/EstoqueAPI.git
+   git clone https://github.com/J-edu-lima/EstoqueAPI.git
    ```
 
-2. **Entre na pasta do projeto**:
-   ```bash
-   cd EstoqueAPI
-   ```
+2. **Abra o projeto em sua IDE** (recomendamos IntelliJ IDEA ou Eclipse).
 
-3. **Configure o banco de dados**:
-   - Crie um banco de dados chamado `estoqueAPI` no MsSQL.
-   - Atualize as configurações de conexão no arquivo `application.properties`.
+3. **Configuração do Banco de Dados**:
+   - Acesse o arquivo `application.properties` e configure as credenciais do banco de dados MySQL ou de outro banco de sua escolha.
 
-4. **Execute o projeto**: Comece a usar o programa e faça as requisiçoes pelo postman ou em outra plataforma.
+4. **Rodando o Projeto**:
+   - Execute a classe **`InterfacePrincipal.java`** para iniciar o sistema.
+   - A API estará disponível em `http://localhost:8080` após a execução.
 
-5. **Endpoints**: A collection do Postman está salvo em "postmanRequisições", sendo necessario apenas a importação para o seu postman.
+5. **Testando a API**:
+   - Importe o arquivo **`PostmanRequisicoes.json`** para o Postman e utilize as requisições já configuradas.
 
-## Futuras Atualizações
+---
 
-**Este projeto é um MVP e há planos para futuras atualizações, incluindo**:
-   - Implementação de autenticação e autorização.
-   - Interface gráfica para facilitar a interação do usuário.
-   - Relatórios detalhados de vendas e estoque.
+### Classes e Métodos Importantes
 
-## Contribuições
- Se você quiser ajudar a melhorar o projeto, fique à vontade para sugerir ideias ou fazer alterações.
+- **ClientAPI.java**: Responsável pela comunicação com APIs externas, com funções para realizar requisições HTTP (RESTful, por exemplo).
+  
+- **Controller**: Os controladores lidam com as requisições HTTP, interagem com os serviços e retornam os resultados.
+    - **ProdutoCadastroController.java**
+    - **ProdutoEntradaController.java**
+    - **ProdutoSaidaController.java**
+  
+- **Entity**: Representa as entidades do modelo de dados, mapeando para o banco de dados.
+    - **ProdutoCadastro.java**
+    - **ProdutoEntrada.java**
+    - **ProdutoSaida.java**
+  
+- **Model**: Contém os DTOs (Data Transfer Objects) utilizados para transferir dados entre as camadas.
+    - **CriarProdutoCadastroEntradaDTO.java**
+    - **CriarProdutoEntradaDTO.java**
+    - **CriarProdutoSaidaDTO.java**
+  
+- **Repository**: Interfaces que estendem `JpaRepository` para interagir com o banco de dados.
+    - **ProdutoCadastroRepository.java**
+    - **ProdutoEntradaRepository.java**
+    - **ProdutoSaidaRepository.java**
+  
+- **Service**: Contém a lógica de negócios e regras de processamento de dados.
+    - **ProdutoCadastroService.java**
+    - **ProdutoEntradaService.java**
+    - **ProdutoSaidaService.java**
+    - **CalculoService.java**
+
+---
+
+### Método `CalculoServiceImpl`
+
+A classe **`CalculoServiceImpl`** contém a lógica de cálculo e precificação de produtos. Os métodos importantes são:
+
+- **`calcularValorVenda(BigDecimal valorCompra, double porcentagem)`**: Calcula o valor final de venda de um produto com base no valor de compra e na porcentagem de lucro.
+
+- **`calcularValorTotalVenda(BigDecimal valorVenda, int quantidade)`**: Calcula o valor total de vendas com base no valor de venda unitário e a quantidade de produtos.
+
+- **Soma e Subtração de Estoque**: Métodos responsáveis por adicionar ou remover quantidades do estoque.
+
+---
+
+### Documentação da API
+
+A documentação das rotas da API já está configurada e pode ser importada diretamente no **Postman**. O arquivo **`PostmanRequisicoes.json`** contém todas as requisições configuradas para testar os endpoints do sistema.
+
+---
+
+### Contribuindo
+
+Contribuições são bem-vindas! Siga o fluxo de **fork**, **commit** e **pull request** para adicionar melhorias ou correções ao projeto.
+
+---
+
+### Imagens
+
+![Tela Principal](https://github.com/J-edu-lima/EstoqueAPI/blob/main/images/InterfacePrincipal.png?raw=true)
+![Produtos Cadastrados](https://github.com/J-edu-lima/EstoqueAPI/blob/main/images/ProdutosCadastrados.png?raw=true)
+![Deletar Entradas](https://github.com/J-edu-lima/EstoqueAPI/blob/main/images/DeletarEntrada.png?raw=true)
+![Saida Cadastrada](https://github.com/J-edu-lima/EstoqueAPI/blob/main/images/SaidaCadastro.png?raw=true)
+
+---
