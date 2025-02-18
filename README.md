@@ -4,7 +4,7 @@
 
 ### Resumo
 
-**EstoqueAPI** é uma API de gerenciamento de estoque, projetada para facilitar o controle de produtos para pequenos lojistas. O sistema permite realizar operações essenciais, como **registrar, atualizar, buscar e deletar produtos**, além de **gerenciar entradas e saídas de produtos**. A API também oferece um método de cálculo que **precifica automaticamente os produtos** ao serem cadastrados no sistema.
+**EstoqueAPI** é uma API de gerenciamento de estoque, projetada para facilitar o controle de produtos para pequenos lojistas. O sistema permite realizar operações essenciais, como **registrar, atualizar, buscar e deletar produtos**, além de **gerenciar entradas e saídas de produtos**. A API também oferece um método de cálculo que **precifica automaticamente os produtos** ao serem cadastrados no sistema e uma interface visual feita utilizando JFrame.
 
 ### Funcionalidades
 
